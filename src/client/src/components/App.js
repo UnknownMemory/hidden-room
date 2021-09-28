@@ -10,23 +10,14 @@ import Register from './Register/Register';
 import Main from './Main/Main';
 import NotFound from './NotFound/NotFound';
 import UserContext from '../contexts/UserContext';
+import APIService from '../services/APIService';
 
 const App = () => {
     const [user, setUser] = useState({});
 
     const getUserDetail = async () => {
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/me/`, {
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-            method: 'GET',
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            setUser(response);
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        const currentUser = await APIService.getCurrentUser();
+        setUser(currentUser);
     };
 
     useEffect(() => {

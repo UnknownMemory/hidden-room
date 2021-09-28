@@ -2,6 +2,7 @@ import React, {useReducer, useEffect} from 'react';
 import {BrowserRouter as Router, Switch, Route, Link, Redirect} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
+import APIService from '../../services/APIService';
 
 import RegisterReducer from './RegisterReducer';
 
@@ -25,17 +26,7 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/create/`, {
-            body: formdata,
-            method: 'POST',
-        });
-
-        if (res.ok) {
-            console.log('Registered');
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+       APIService.Register(formdata);
     };
 
     useEffect(() => {
