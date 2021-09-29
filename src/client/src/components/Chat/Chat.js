@@ -25,16 +25,6 @@ const Chat = (props) => {
 
     const [state, dispatch] = useReducer(ChatReducer, initState);
 
-    const getOldMessages = async (url) => {
-        let res = await fetch(url, {
-            method: 'GET',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        let response = await res.json();
-        return response;
-    };
-
     const getChatrooms = async () => {
         let response = await APIService.getChatroom(props.roomID);
         dispatch({type: 'get_room', room: response});
@@ -51,13 +41,13 @@ const Chat = (props) => {
         dispatch({type: 'message', message: ''});
     };
 
-    const scrollEvent = () => {
+    const scrollEvent = async () => {
         if (messagesDiv.current.scrollTop <= 0 && state.next != null) {
-            getOldMessages(state.next).then((res) => {
-                dispatch({type: 'messages', messages: [...res.results.reverse(), ...state.messages]});
-                dispatch({type: 'next', next: res.next});
-                document.querySelectorAll('.message')[20].scrollIntoView();
-            });
+            const messages = await APIService.getOldMessages(state.next);
+
+            dispatch({type: 'messages', messages: [...messages.results.reverse(), ...state.messages]});
+            dispatch({type: 'next', next: messages.next});
+            document.querySelectorAll('.message')[20].scrollIntoView();
         }
     };
 
@@ -73,7 +63,7 @@ const Chat = (props) => {
 
     useEffect(() => {
         getChatrooms();
-        getOldMessages(`${process.env.API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
+        APIService.getOldMessages(`${process.env.API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
             dispatch({type: 'messages', messages: res.results.reverse()});
             dispatch({type: 'next', next: res.next});
             document.querySelector('.messages').scrollTo(0, document.querySelector('.messages').scrollHeight);
