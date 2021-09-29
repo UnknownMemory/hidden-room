@@ -3,6 +3,7 @@ import {Form, InputGroup, Button} from 'react-bootstrap';
 import Cookies from 'js-cookie';
 
 import AddFriendReducer from './AddFriendReducer';
+import APIService from '../../services/APIService';
 
 const AddFriend = () => {
     const [state, dispatch] = useReducer(AddFriendReducer, {username: ''});
@@ -13,15 +14,8 @@ const AddFriend = () => {
         const formdata = new FormData();
         formdata.append('username', state.username);
 
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/friends/add/`, {
-            body: formdata,
-            method: 'POST',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            return;
-        }
+        await APIService.AddFriendRequest(formdata);
+        return;
     };
 
     return (

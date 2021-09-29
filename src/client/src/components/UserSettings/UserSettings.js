@@ -41,18 +41,8 @@ const UserSettings = (props) => {
         //formdata.append('password', state.newPassword);
         //formdata.append('confirm_password', state.confirmNewPassword);
 
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/me/update/${state.detail.id}/`, {
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-            body: formdata,
-            method: 'PATCH',
-        });
-
-        if (res.ok) {
-            props.handleModal();
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        await APIService.UpdateAccount(state.detail.id, formdata);
+        props.handleModal();
     };
 
     useEffect(() => {

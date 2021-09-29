@@ -25,10 +25,7 @@ const Card = (props) => {
     };
 
     const deleteFriend = async (props) => {
-        await fetch(`${process.env.API_URL}/api/v1/account/friends/${props.friend.id}/`, {
-            method: 'DELETE',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
+        await APIService.deleteFriend(props.friend.id);
         props.getFriends();
     };
 
@@ -38,11 +35,7 @@ const Card = (props) => {
         formdata.append('user2_id', props.friend.user2_id);
         formdata.append('relationship', 'FRIENDS');
 
-        await fetch(`${process.env.API_URL}/api/v1/account/friends/${props.friend.id}/update/`, {
-            method: 'PATCH',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-            body: formdata,
-        });
+        await APIService.AcceptFriend(props.friend.id, formdata);
         props.getFriends();
     };
 
