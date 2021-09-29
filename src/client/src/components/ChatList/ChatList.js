@@ -3,6 +3,7 @@ import {Col, Media, Navbar} from 'react-bootstrap';
 import {BsFillPersonFill} from 'react-icons/bs';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
+import APIService from '../../services/APIService';
 import 'holderjs';
 
 import Profile from '../Profile/Profile';
@@ -22,18 +23,8 @@ const ChatList = () => {
     const toRoom = useCallback((id) => history.push(`/app/room/${id}`), [history]);
 
     const getChatrooms = async () => {
-        let res = await fetch(`${process.env.API_URL}/api/v1/chat/private-chatrooms/`, {
-            method: 'GET',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'get_rooms', rooms: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        const response = await APIService.getChatrooms();
+        dispatch({type: 'get_rooms', rooms: response});
     };
 
     const rooms = state.rooms.map((room) => {

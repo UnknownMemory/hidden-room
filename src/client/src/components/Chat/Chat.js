@@ -8,6 +8,7 @@ import Message from '../Message/Message';
 
 import UserContext from '../../contexts/UserContext';
 import ChatReducer from './ChatReducer';
+import APIService from '../../services/APIService';
 
 const Chat = (props) => {
     let ws = useRef();
@@ -35,18 +36,8 @@ const Chat = (props) => {
     };
 
     const getChatrooms = async () => {
-        let res = await fetch(`${process.env.API_URL}/api/v1/chat/private-chatrooms/${props.roomID}/`, {
-            method: 'GET',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'get_room', room: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        let response = await APIService.getChatroom(props.roomID);
+        dispatch({type: 'get_room', room: response});
     };
 
     const sendMessage = () => {

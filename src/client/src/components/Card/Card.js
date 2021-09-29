@@ -7,6 +7,7 @@ import 'holderjs';
 
 import UserContext from '../../contexts/UserContext';
 import CardReducer from './CardReducer';
+import APIService from '../../services/APIService';
 
 const Card = (props) => {
     const user = useContext(UserContext);
@@ -18,18 +19,9 @@ const Card = (props) => {
 
     const getProfile = async (props) => {
         const id = props.friend.user_id == user.id ? props.friend.user_id : props.friend.user2_id;
-        const res = await fetch(`${process.env.API_URL}/api/v1/account/friend/${id}/detail/`, {
-            method: 'GET',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'profile', profile: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        const response = await APIService.getFriendProfile(id);
+   
+        dispatch({type: 'profile', profile: response});
     };
 
     const deleteFriend = async (props) => {

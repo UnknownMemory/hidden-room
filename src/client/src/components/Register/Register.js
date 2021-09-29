@@ -26,7 +26,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-       APIService.Register(formdata);
+       await APIService.Register(formdata);
+       return;
     };
 
     useEffect(() => {
@@ -34,24 +35,16 @@ const Register = () => {
     }, []);
 
     const checkEmail = useDebouncedCallback(async (dispatch) => {
-        await fetch(`${process.env.API_URL}/api/v1/account/check/email/?email=${state.email}`, {
-            method: 'GET',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                dispatch({type: 'error', errorType: 'email', error: data});
-            });
+        const response = await APIService.checkEmail(state.email);
+        dispatch({type: 'error', errorType: 'email', error: response});
+        
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
-        await fetch(`${process.env.API_URL}/api/v1/account/check/username/?username=${state.username}`, {
-            method: 'GET',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                dispatch({type: 'error', errorType: 'username', error: data});
-            });
+        const response = await APIService.checkUsername(state.username);
+        dispatch({type: 'error', errorType: 'username', error: response});
     }, 800);
+    
     return (
         <Container className="d-flex justify-content-center align-items-center h-100" fluid>
             <Row>

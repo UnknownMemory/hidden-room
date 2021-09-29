@@ -3,6 +3,7 @@ import {Modal, Button, Form, InputGroup, Tooltip, OverlayTrigger} from 'react-bo
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
+import APIService from '../../services/APIService';
 
 import UserSettingsReducer from './UserSettingsReducer';
 
@@ -22,17 +23,8 @@ const UserSettings = (props) => {
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
 
     const getDetail = async () => {
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/me/detail/`, {
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'detail', detail: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        let response = await APIService.getUserDetail();
+        dispatch({type: 'detail', detail: response});
     };
 
     const onSubmit = async (e) => {
