@@ -13,10 +13,11 @@ import UserContext from '../contexts/UserContext';
 import UserService from '../services/UserService';
 
 const App = () => {
+    const UserAPI = new UserService();
     const [user, setUser] = useState({});
 
     const getUserDetail = async () => {
-        const currentUser = await UserService.getCurrentUser();
+        const currentUser = await UserAPI.getCurrentUser();
         setUser(currentUser);
     };
 

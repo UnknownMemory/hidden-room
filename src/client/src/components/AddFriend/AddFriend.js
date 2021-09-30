@@ -6,6 +6,7 @@ import AddFriendReducer from './AddFriendReducer';
 import UserService from '../../services/UserService';
 
 const AddFriend = () => {
+    const UserAPI = new UserService();
     const [state, dispatch] = useReducer(AddFriendReducer, {username: ''});
 
     const onSubmit = async (e) => {
@@ -14,7 +15,7 @@ const AddFriend = () => {
         const formdata = new FormData();
         formdata.append('username', state.username);
 
-        await UserService.AddFriendRequest(formdata);
+        await UserAPI.AddFriendRequest(formdata);
         return;
     };
 

@@ -9,6 +9,7 @@ import {useSwipeable} from 'react-swipeable';
 import UserService from '../../services/UserService';
 
 const FriendList = () => {
+    const UserAPI = new UserService();
     const initState = {
         isOpen: false,
         friends: [],
@@ -23,7 +24,7 @@ const FriendList = () => {
     };
 
     const getFriends = async () => {
-        let response = await UserService.getFriends();
+        let response = await UserAPI.getFriends();
         dispatch({type: 'get_friend', friends: response});
     };
 

@@ -8,6 +8,7 @@ import UserService from '../../services/UserService';
 import UserSettingsReducer from './UserSettingsReducer';
 
 const UserSettings = (props) => {
+    const UserAPI = new UserService();
     const initState = {
         detail: false,
         modify: {
@@ -23,7 +24,7 @@ const UserSettings = (props) => {
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
 
     const getDetail = async () => {
-        let response = await UserService.getUserDetail();
+        let response = await UserAPI.getUserDetail();
         dispatch({type: 'detail', detail: response});
     };
 
@@ -41,7 +42,7 @@ const UserSettings = (props) => {
         //formdata.append('password', state.newPassword);
         //formdata.append('confirm_password', state.confirmNewPassword);
 
-        await UserService.UpdateAccount(state.detail.id, formdata);
+        await UserAPI.UpdateAccount(state.detail.id, formdata);
         props.handleModal();
     };
 

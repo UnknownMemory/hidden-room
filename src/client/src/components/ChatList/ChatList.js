@@ -12,6 +12,7 @@ import ChatListReducer from './ChatListReducer';
 import UserContext from '../../contexts/UserContext';
 
 const ChatList = () => {
+    const Chat = new ChatService();
     const user = useContext(UserContext);
     const initState = {
         rooms: [],
@@ -23,7 +24,7 @@ const ChatList = () => {
     const toRoom = useCallback((id) => history.push(`/app/room/${id}`), [history]);
 
     const getChatrooms = async () => {
-        const response = await ChatService.getChatrooms();
+        const response = await Chat.getChatrooms();
         dispatch({type: 'get_rooms', rooms: response});
     };
 
