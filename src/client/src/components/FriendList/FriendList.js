@@ -6,7 +6,7 @@ import Card from '../Card/Card';
 import AddFriend from '../AddFriend/AddFriend';
 import FriendListReducer from './FriendListReducer';
 import {useSwipeable} from 'react-swipeable';
-import APIService from '../../services/APIService';
+import UserService from '../../services/UserService';
 
 const FriendList = () => {
     const initState = {
@@ -23,7 +23,7 @@ const FriendList = () => {
     };
 
     const getFriends = async () => {
-        let response = await APIService.getFriends();
+        let response = await UserService.getFriends();
         dispatch({type: 'get_friend', friends: response});
     };
 

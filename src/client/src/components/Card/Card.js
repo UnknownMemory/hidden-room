@@ -7,7 +7,7 @@ import 'holderjs';
 
 import UserContext from '../../contexts/UserContext';
 import CardReducer from './CardReducer';
-import APIService from '../../services/APIService';
+import UserService from '../../services/UserService';
 
 const Card = (props) => {
     const user = useContext(UserContext);
@@ -19,13 +19,13 @@ const Card = (props) => {
 
     const getProfile = async (props) => {
         const id = props.friend.user_id == user.id ? props.friend.user_id : props.friend.user2_id;
-        const response = await APIService.getFriendProfile(id);
+        const response = await UserService.getFriendProfile(id);
    
         dispatch({type: 'profile', profile: response});
     };
 
     const deleteFriend = async (props) => {
-        await APIService.deleteFriend(props.friend.id);
+        await UserService.deleteFriend(props.friend.id);
         props.getFriends();
     };
 
@@ -35,7 +35,7 @@ const Card = (props) => {
         formdata.append('user2_id', props.friend.user2_id);
         formdata.append('relationship', 'FRIENDS');
 
-        await APIService.AcceptFriend(props.friend.id, formdata);
+        await UserService.AcceptFriend(props.friend.id, formdata);
         props.getFriends();
     };
 

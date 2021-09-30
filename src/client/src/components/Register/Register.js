@@ -2,7 +2,7 @@ import React, {useReducer, useEffect} from 'react';
 import {BrowserRouter as Router, Switch, Route, Link, Redirect} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
-import APIService from '../../services/APIService';
+import AuthService from '../../services/AuthService';
 
 import RegisterReducer from './RegisterReducer';
 
@@ -26,7 +26,7 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-       await APIService.Register(formdata);
+       await AuthService.Register(formdata);
        return;
     };
 
@@ -35,13 +35,13 @@ const Register = () => {
     }, []);
 
     const checkEmail = useDebouncedCallback(async (dispatch) => {
-        const response = await APIService.checkEmail(state.email);
+        const response = await AuthService.checkEmail(state.email);
         dispatch({type: 'error', errorType: 'email', error: response});
         
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
-        const response = await APIService.checkUsername(state.username);
+        const response = await AuthService.checkUsername(state.username);
         dispatch({type: 'error', errorType: 'username', error: response});
     }, 800);
     

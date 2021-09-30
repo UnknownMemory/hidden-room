@@ -10,13 +10,13 @@ import Register from './Register/Register';
 import Main from './Main/Main';
 import NotFound from './NotFound/NotFound';
 import UserContext from '../contexts/UserContext';
-import APIService from '../services/APIService';
+import UserService from '../services/UserService';
 
 const App = () => {
     const [user, setUser] = useState({});
 
     const getUserDetail = async () => {
-        const currentUser = await APIService.getCurrentUser();
+        const currentUser = await UserService.getCurrentUser();
         setUser(currentUser);
     };
 

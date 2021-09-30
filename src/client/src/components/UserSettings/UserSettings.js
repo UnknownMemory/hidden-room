@@ -3,7 +3,7 @@ import {Modal, Button, Form, InputGroup, Tooltip, OverlayTrigger} from 'react-bo
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
-import APIService from '../../services/APIService';
+import UserService from '../../services/UserService';
 
 import UserSettingsReducer from './UserSettingsReducer';
 
@@ -23,7 +23,7 @@ const UserSettings = (props) => {
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
 
     const getDetail = async () => {
-        let response = await APIService.getUserDetail();
+        let response = await UserService.getUserDetail();
         dispatch({type: 'detail', detail: response});
     };
 
@@ -41,7 +41,7 @@ const UserSettings = (props) => {
         //formdata.append('password', state.newPassword);
         //formdata.append('confirm_password', state.confirmNewPassword);
 
-        await APIService.UpdateAccount(state.detail.id, formdata);
+        await UserService.UpdateAccount(state.detail.id, formdata);
         props.handleModal();
     };
 

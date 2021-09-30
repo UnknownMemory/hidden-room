@@ -3,7 +3,7 @@ import {Col, Media, Navbar} from 'react-bootstrap';
 import {BsFillPersonFill} from 'react-icons/bs';
 import {useHistory} from 'react-router-dom';
 import Cookies from 'js-cookie';
-import APIService from '../../services/APIService';
+import ChatService from '../../services/ChatService';
 import 'holderjs';
 
 import Profile from '../Profile/Profile';
@@ -23,7 +23,7 @@ const ChatList = () => {
     const toRoom = useCallback((id) => history.push(`/app/room/${id}`), [history]);
 
     const getChatrooms = async () => {
-        const response = await APIService.getChatrooms();
+        const response = await ChatService.getChatrooms();
         dispatch({type: 'get_rooms', rooms: response});
     };
 

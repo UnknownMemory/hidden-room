@@ -8,7 +8,7 @@ import Message from '../Message/Message';
 
 import UserContext from '../../contexts/UserContext';
 import ChatReducer from './ChatReducer';
-import APIService from '../../services/APIService';
+import ChatService from '../../services/ChatService';
 
 const Chat = (props) => {
     let ws = useRef();
@@ -26,7 +26,7 @@ const Chat = (props) => {
     const [state, dispatch] = useReducer(ChatReducer, initState);
 
     const getChatrooms = async () => {
-        let response = await APIService.getChatroom(props.roomID);
+        let response = await ChatService.getChatroom(props.roomID);
         dispatch({type: 'get_room', room: response});
     };
 
@@ -43,7 +43,7 @@ const Chat = (props) => {
 
     const scrollEvent = async () => {
         if (messagesDiv.current.scrollTop <= 0 && state.next != null) {
-            const messages = await APIService.getOldMessages(state.next);
+            const messages = await ChatService.getOldMessages(state.next);
 
             dispatch({type: 'messages', messages: [...messages.results.reverse(), ...state.messages]});
             dispatch({type: 'next', next: messages.next});
@@ -63,7 +63,7 @@ const Chat = (props) => {
 
     useEffect(() => {
         getChatrooms();
-        APIService.getOldMessages(`${process.env.API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
+        ChatService.getOldMessages(`${process.env.API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
             dispatch({type: 'messages', messages: res.results.reverse()});
             dispatch({type: 'next', next: res.next});
             document.querySelector('.messages').scrollTo(0, document.querySelector('.messages').scrollHeight);

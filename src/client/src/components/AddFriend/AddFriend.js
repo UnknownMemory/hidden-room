@@ -3,7 +3,7 @@ import {Form, InputGroup, Button} from 'react-bootstrap';
 import Cookies from 'js-cookie';
 
 import AddFriendReducer from './AddFriendReducer';
-import APIService from '../../services/APIService';
+import UserService from '../../services/UserService';
 
 const AddFriend = () => {
     const [state, dispatch] = useReducer(AddFriendReducer, {username: ''});
@@ -14,7 +14,7 @@ const AddFriend = () => {
         const formdata = new FormData();
         formdata.append('username', state.username);
 
-        await APIService.AddFriendRequest(formdata);
+        await UserService.AddFriendRequest(formdata);
         return;
     };
 

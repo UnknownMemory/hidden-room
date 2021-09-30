@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
-import APIService from '../../services/APIService';
+import AuthService from '../../services/AuthService';
 
 const Login = () => {
     const initState = {
@@ -28,7 +28,7 @@ const Login = () => {
         formdata.append('username', state.username);
         formdata.append('password', state.password);
 
-        let response = await APIService.Login(formdata);
+        let response = await AuthService.Login(formdata);
         Cookies.set('auth_token', response['token']);
         user.getUserDetail();
     };
