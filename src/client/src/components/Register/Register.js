@@ -1,5 +1,5 @@
 import React, {useReducer, useEffect} from 'react';
-import {BrowserRouter as Router, Switch, Route, Link, Redirect} from 'react-router-dom';
+import {BrowserRouter as Link} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
 import AuthService from '../../services/AuthService';

@@ -2,7 +2,6 @@ import React, {useEffect, useReducer} from 'react';
 import {Modal, Button, Form, InputGroup, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import UserService from '../../services/UserService';
 
 import UserSettingsReducer from './UserSettingsReducer';

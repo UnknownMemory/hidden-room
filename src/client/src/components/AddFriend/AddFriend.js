@@ -1,6 +1,5 @@
 import React, {useReducer} from 'react';
 import {Form, InputGroup, Button} from 'react-bootstrap';
-import Cookies from 'js-cookie';
 
 import AddFriendReducer from './AddFriendReducer';
 import UserService from '../../services/UserService';

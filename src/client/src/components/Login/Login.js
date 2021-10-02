@@ -1,6 +1,6 @@
 import React, {useContext, useReducer, useEffect} from 'react';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
-import {BrowserRouter as Router, Switch, Route, Link, Redirect} from 'react-router-dom';
+import {BrowserRouter as Link} from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';

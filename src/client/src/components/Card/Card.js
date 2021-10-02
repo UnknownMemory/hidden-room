@@ -1,8 +1,7 @@
 import React, {useReducer, useContext, useEffect} from 'react';
-import {Media, Button, Figure} from 'react-bootstrap';
+import {Media, Button} from 'react-bootstrap';
 import {BsX, BsCheck} from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import 'holderjs';
 
 import UserContext from '../../contexts/UserContext';

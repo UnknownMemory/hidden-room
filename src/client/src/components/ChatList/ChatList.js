@@ -1,8 +1,7 @@
-import React, {useContext, useState, useEffect, useReducer, useCallback} from 'react';
+import React, {useContext, useEffect, useReducer, useCallback} from 'react';
 import {Col, Media, Navbar} from 'react-bootstrap';
 import {BsFillPersonFill} from 'react-icons/bs';
 import {useHistory} from 'react-router-dom';
-import Cookies from 'js-cookie';
 import ChatService from '../../services/ChatService';
 import 'holderjs';
 
