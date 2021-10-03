@@ -1,5 +1,5 @@
 import Request from '../utils/request';
-
+console.log(process.env);
 class AuthService {
     constructor(){
         this.url = `${process.env.REACT_APP_API_URL}/api/v1`;
