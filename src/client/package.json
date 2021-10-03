@@ -5,7 +5,7 @@
     "main": "./src/index.js",
     "scripts": {
         "start": "webpack-dev-server --hot --open --mode development",
-        "build": "webpack --mode production ./src/index.js --output ./build/main.js"
+        "build": "webpack --mode production ./src/index.js --output-path ./build/"
     },
     "keywords": [],
     "author": "",
