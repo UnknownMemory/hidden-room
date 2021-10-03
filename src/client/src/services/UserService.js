@@ -3,7 +3,7 @@ import Request from '../utils/request';
 
 class UserService {
     constructor(){
-        this.url = `${process.env.API_URL}/api/v1`;
+        this.url = `${process.env.REACT_APP_API_URL}/api/v1`;
         this.token = Cookies.get('auth_token');
     }
 

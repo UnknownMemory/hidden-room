@@ -64,7 +64,7 @@ const Chat = (props) => {
 
     useEffect(() => {
         getChatrooms();
-        Chat.getOldMessages(`${process.env.API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
+        Chat.getOldMessages(`${process.env.REACT_APP_API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
             dispatch({type: 'messages', messages: res.results.reverse()});
             dispatch({type: 'next', next: res.next});
             document.querySelector('.messages').scrollTo(0, document.querySelector('.messages').scrollHeight);
@@ -72,7 +72,7 @@ const Chat = (props) => {
 
         const protocolWS = window.location.protocol == 'https:' ? 'wss' : 'ws';
         ws.current = new WebSocket(
-            `${protocolWS}://${process.env.SOCKET_URL}/chat/${props.roomID}/?token=${Cookies.get('auth_token')}`
+            `${protocolWS}://${process.env.REACT_APP_SOCKET_URL}/chat/${props.roomID}/?token=${Cookies.get('auth_token')}`
         );
 
         return () => {
