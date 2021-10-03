@@ -1,10 +1,11 @@
 import React, {useContext, useReducer, useEffect} from 'react';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
-import {BrowserRouter as Router, Switch, Route, Link, Redirect} from 'react-router-dom';
+import {BrowserRouter as Link} from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
+import AuthService from '../../services/AuthService';
 
 const Login = () => {
     const initState = {
@@ -27,19 +28,9 @@ const Login = () => {
         formdata.append('username', state.username);
         formdata.append('password', state.password);
 
-        let res = await fetch(`${process.env.API_URL}/api/v1/auth/`, {
-            body: formdata,
-            method: 'POST',
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            Cookies.set('auth_token', response['token']);
-            user.getUserDetail();
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        let response = await AuthService.Login(formdata);
+        Cookies.set('auth_token', response['token']);
+        user.getUserDetail();
     };
 
     return (

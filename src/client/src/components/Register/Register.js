@@ -1,7 +1,8 @@
 import React, {useReducer, useEffect} from 'react';
-import {BrowserRouter as Router, Switch, Route, Link, Redirect} from 'react-router-dom';
+import {BrowserRouter as Link} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
+import AuthService from '../../services/AuthService';
 
 import RegisterReducer from './RegisterReducer';
 
@@ -25,17 +26,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/create/`, {
-            body: formdata,
-            method: 'POST',
-        });
-
-        if (res.ok) {
-            console.log('Registered');
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+       await AuthService.Register(formdata);
+       return;
     };
 
     useEffect(() => {
@@ -43,24 +35,16 @@ const Register = () => {
     }, []);
 
     const checkEmail = useDebouncedCallback(async (dispatch) => {
-        await fetch(`${process.env.API_URL}/api/v1/account/check/email/?email=${state.email}`, {
-            method: 'GET',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                dispatch({type: 'error', errorType: 'email', error: data});
-            });
+        const response = await AuthService.checkEmail(state.email);
+        dispatch({type: 'error', errorType: 'email', error: response});
+        
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
-        await fetch(`${process.env.API_URL}/api/v1/account/check/username/?username=${state.username}`, {
-            method: 'GET',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                dispatch({type: 'error', errorType: 'username', error: data});
-            });
+        const response = await AuthService.checkUsername(state.username);
+        dispatch({type: 'error', errorType: 'username', error: response});
     }, 800);
+    
     return (
         <Container className="d-flex justify-content-center align-items-center h-100" fluid>
             <Row>

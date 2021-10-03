@@ -1,13 +1,14 @@
 import React, {useReducer, useEffect} from 'react';
 import {Col, Navbar, Nav} from 'react-bootstrap';
-import Cookies from 'js-cookie';
 
 import Card from '../Card/Card';
 import AddFriend from '../AddFriend/AddFriend';
 import FriendListReducer from './FriendListReducer';
 import {useSwipeable} from 'react-swipeable';
+import UserService from '../../services/UserService';
 
 const FriendList = () => {
+    const UserAPI = new UserService();
     const initState = {
         isOpen: false,
         friends: [],
@@ -22,16 +23,8 @@ const FriendList = () => {
     };
 
     const getFriends = async () => {
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/friends/`, {
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'get_friend', friends: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        let response = await UserAPI.getFriends();
+        dispatch({type: 'get_friend', friends: response});
     };
 
     const friends = state.friends.map((friend) => {

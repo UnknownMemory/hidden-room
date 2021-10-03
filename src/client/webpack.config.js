@@ -14,7 +14,7 @@ module.exports = {
         filename: 'bundle.js',
     },
     devServer: {
-        contentBase: './',
+        static: './',
         historyApiFallback: true,
         port: 8081,
     },

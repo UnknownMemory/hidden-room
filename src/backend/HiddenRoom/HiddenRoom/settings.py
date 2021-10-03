@@ -15,7 +15,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('PROD') == 'True'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -88,7 +88,7 @@ if(DEBUG):
             "BACKEND": "channels.layers.InMemoryChannelLayer"
         }
     }
-elif(DEBUG == False):
+elif(not DEBUG):
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": 'channels_redis.core.RedisChannelLayer',

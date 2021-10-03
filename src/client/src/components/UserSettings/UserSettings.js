@@ -2,11 +2,12 @@ import React, {useEffect, useReducer} from 'react';
 import {Modal, Button, Form, InputGroup, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
+import UserService from '../../services/UserService';
 
 import UserSettingsReducer from './UserSettingsReducer';
 
 const UserSettings = (props) => {
+    const UserAPI = new UserService();
     const initState = {
         detail: false,
         modify: {
@@ -22,17 +23,8 @@ const UserSettings = (props) => {
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
 
     const getDetail = async () => {
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/me/detail/`, {
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'detail', detail: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        let response = await UserAPI.getUserDetail();
+        dispatch({type: 'detail', detail: response});
     };
 
     const onSubmit = async (e) => {
@@ -49,18 +41,8 @@ const UserSettings = (props) => {
         //formdata.append('password', state.newPassword);
         //formdata.append('confirm_password', state.confirmNewPassword);
 
-        let res = await fetch(`${process.env.API_URL}/api/v1/account/me/update/${state.detail.id}/`, {
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-            body: formdata,
-            method: 'PATCH',
-        });
-
-        if (res.ok) {
-            props.handleModal();
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        await UserAPI.UpdateAccount(state.detail.id, formdata);
+        props.handleModal();
     };
 
     useEffect(() => {

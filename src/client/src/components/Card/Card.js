@@ -1,14 +1,15 @@
 import React, {useReducer, useContext, useEffect} from 'react';
-import {Media, Button, Figure} from 'react-bootstrap';
+import {Media, Button} from 'react-bootstrap';
 import {BsX, BsCheck} from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import 'holderjs';
 
 import UserContext from '../../contexts/UserContext';
 import CardReducer from './CardReducer';
+import UserService from '../../services/UserService';
 
 const Card = (props) => {
+    const UserAPI = new UserService();
     const user = useContext(UserContext);
     const initState = {
         profile: null,
@@ -17,26 +18,14 @@ const Card = (props) => {
     const [state, dispatch] = useReducer(CardReducer, initState);
 
     const getProfile = async (props) => {
-        const id = props.friend.user_id == user.id ? props.friend.user_id : props.friend.user2_id;
-        const res = await fetch(`${process.env.API_URL}/api/v1/account/friend/${id}/detail/`, {
-            method: 'GET',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
-
-        if (res.ok) {
-            let response = await res.json();
-            dispatch({type: 'profile', profile: response});
-        } else {
-            let error = await res.json();
-            console.log(error);
-        }
+        const id = props.friend.user_id != user.id ? props.friend.user_id : props.friend.user2_id;
+        const response = await UserAPI.getFriendProfile(id);
+   
+        dispatch({type: 'profile', profile: response});
     };
 
     const deleteFriend = async (props) => {
-        await fetch(`${process.env.API_URL}/api/v1/account/friends/${props.friend.id}/`, {
-            method: 'DELETE',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-        });
+        await UserAPI.deleteFriend(props.friend.id);
         props.getFriends();
     };
 
@@ -46,11 +35,7 @@ const Card = (props) => {
         formdata.append('user2_id', props.friend.user2_id);
         formdata.append('relationship', 'FRIENDS');
 
-        await fetch(`${process.env.API_URL}/api/v1/account/friends/${props.friend.id}/update/`, {
-            method: 'PATCH',
-            headers: {Authorization: `Token ${Cookies.get('auth_token')}`},
-            body: formdata,
-        });
+        await UserAPI.AcceptFriend(props.friend.id, formdata);
         props.getFriends();
     };
 
