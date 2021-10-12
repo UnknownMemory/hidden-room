@@ -1,5 +1,5 @@
 import React, {useReducer, useEffect} from 'react';
-import {BrowserRouter as Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
 import AuthService from '../../services/AuthService';
@@ -26,8 +26,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-       await AuthService.Register(formdata);
-       return;
+        await AuthService.Register(formdata);
+        return;
     };
 
     useEffect(() => {
@@ -37,14 +37,13 @@ const Register = () => {
     const checkEmail = useDebouncedCallback(async (dispatch) => {
         const response = await AuthService.checkEmail(state.email);
         dispatch({type: 'error', errorType: 'email', error: response});
-        
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
         const response = await AuthService.checkUsername(state.username);
         dispatch({type: 'error', errorType: 'username', error: response});
     }, 800);
-    
+
     return (
         <Container className="d-flex justify-content-center align-items-center h-100" fluid>
             <Row>
@@ -117,12 +116,10 @@ const Register = () => {
                         <Button variant="hidden" type="submit">
                             Register
                         </Button>
-                        <p className="mt-2">
-                            Already have an account?
-                            <span>
-                                <Link to="/login"> Login</Link>
-                            </span>
-                        </p>
+                        <div className="mt-2">
+                            <p className="d-inline">Already have an account?</p>
+                            <Link className="ml-1" to="/login">Login</Link>
+                        </div>
                     </Form>
                 </Col>
             </Row>

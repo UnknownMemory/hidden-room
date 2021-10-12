@@ -1,6 +1,6 @@
 import React, {useContext, useReducer, useEffect} from 'react';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
-import {BrowserRouter as Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';
@@ -60,19 +60,14 @@ const Login = () => {
                                 }
                                 required
                             />
-                            <a className="mt-2" href="#">
-                                Forgot your password?
-                            </a>
                         </Form.Group>
                         <Button variant="hidden" type="submit">
                             Login
                         </Button>
-                        <p className="mt-2">
-                            Don't have an account?
-                            <span>
-                                <Link to="/register">Register</Link>
-                            </span>
-                        </p>
+                        <div className="mt-2">
+                            <p className="d-inline">Don't have an account?</p>
+                            <Link className="ml-1" to="/register">Register</Link>
+                        </div>
                     </Form>
                 </Col>
             </Row>
