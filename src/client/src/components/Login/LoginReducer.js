@@ -6,6 +6,12 @@ const LoginReducer = (state, action) => {
                 [action.field]: action.payload,
             };
         }
+        case 'error': {
+            return {
+                ...state,
+                error: action.error,
+            };
+        }
     }
 };
 
