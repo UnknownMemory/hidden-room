@@ -2,11 +2,13 @@ import React, {useReducer, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
-import AuthService from '../../services/AuthService';
 
 import RegisterReducer from './RegisterReducer';
+import AuthService from '../../services/AuthService';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const Register = () => {
+    useDocumentTitle('Register / Hidden Room');
     const initState = {
         email: '',
         username: '',
@@ -29,10 +31,6 @@ const Register = () => {
         await AuthService.Register(formdata);
         return;
     };
-
-    useEffect(() => {
-        document.title = 'Register / Hidden Room';
-    }, []);
 
     const checkEmail = useDebouncedCallback(async (dispatch) => {
         const response = await AuthService.checkEmail(state.email);
@@ -118,7 +116,9 @@ const Register = () => {
                         </Button>
                         <div className="mt-2">
                             <p className="d-inline">Already have an account?</p>
-                            <Link className="ml-1" to="/login">Login</Link>
+                            <Link className="ml-1" to="/login">
+                                Login
+                            </Link>
                         </div>
                     </Form>
                 </Col>

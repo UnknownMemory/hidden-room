@@ -6,8 +6,10 @@ import Cookies from 'js-cookie';
 import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
 import AuthService from '../../services/AuthService';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const Login = () => {
+    useDocumentTitle('Login / Hidden Room');
     const initState = {
         username: '',
         password: '',
@@ -18,10 +20,6 @@ const Login = () => {
 
     const [state, dispatch] = useReducer(LoginReducer, initState);
 
-    useEffect(() => {
-        document.title = 'Login / Hidden Room';
-    }, []);
-
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -30,8 +28,8 @@ const Login = () => {
         formdata.append('password', state.password);
 
         let response = await AuthService.Login(formdata);
-        if(response['non_field_errors']){
-            dispatch({type: 'error', error: response['non_field_errors'][0]})
+        if (response['non_field_errors']) {
+            dispatch({type: 'error', error: response['non_field_errors'][0]});
             return;
         }
         Cookies.set('auth_token', response['token']);
@@ -69,12 +67,12 @@ const Login = () => {
                         <Button variant="hidden" type="submit">
                             Login
                         </Button>
-                        <Form.Text className="d-inline ml-2 error">
-                                {state.error === true ? '' : state.error}
-                        </Form.Text>
+                        <Form.Text className="d-inline ml-2 error">{state.error === true ? '' : state.error}</Form.Text>
                         <div className="mt-2">
                             <p className="d-inline">Don't have an account?</p>
-                            <Link className="ml-1" to="/register">Register</Link>
+                            <Link className="ml-1" to="/register">
+                                Register
+                            </Link>
                         </div>
                     </Form>
                 </Col>
