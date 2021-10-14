@@ -4,7 +4,13 @@
         transition: 0.3s;
 
         nav {
-            height: 57px;
+            height: 3.56rem;
+
+            .nav-pills {
+                width: 90%;
+                white-space: nowrap;
+                overflow-x: scroll;
+            }
         }
     }
 
