@@ -18,7 +18,7 @@ const Card = (props) => {
     const [state, dispatch] = useReducer(CardReducer, initState);
 
     const getProfile = async (props) => {
-        const id = props.friend.user_id != user.id ? props.friend.user_id : props.friend.user2_id;
+        const id = props.friend.user_id != user.id ? props.friend.user2_id : props.friend.user_id;
         const response = await UserAPI.getFriendProfile(id);
    
         dispatch({type: 'profile', profile: response});
