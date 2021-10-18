@@ -2,8 +2,9 @@ import React, {useEffect, useReducer} from 'react';
 import {Modal, Button, Form, InputGroup, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import UserService from '../../services/UserService';
+import {isMobile} from 'react-device-detect';
 
+import UserService from '../../services/UserService';
 import UserSettingsReducer from './UserSettingsReducer';
 
 const UserSettings = (props) => {
@@ -70,7 +71,7 @@ const UserSettings = (props) => {
                                 required
                             />
                             <InputGroup.Append>
-                                <OverlayTrigger placement="right" overlay={<Tooltip>Modify</Tooltip>}>
+                                <OverlayTrigger show={isMobile ? false : true} trigger="hover" placement="right" overlay={<Tooltip>Modify</Tooltip>}>
                                     <Button
                                         variant="hidden"
                                         type="button"
@@ -99,7 +100,7 @@ const UserSettings = (props) => {
                                 required
                             />
                             <InputGroup.Append>
-                                <OverlayTrigger placement="right" overlay={<Tooltip>Modify</Tooltip>}>
+                                <OverlayTrigger show={isMobile ? false : true} trigger="hover" placement="right" overlay={<Tooltip>Modify</Tooltip>}>
                                     <Button
                                         variant="hidden"
                                         type="button"
