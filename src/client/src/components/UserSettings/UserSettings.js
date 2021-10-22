@@ -2,7 +2,6 @@ import React, {useEffect, useReducer} from 'react';
 import {Modal, Button, Form, InputGroup, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import {isMobile} from 'react-device-detect';
 
 import UserService from '../../services/UserService';
 import UserSettingsReducer from './UserSettingsReducer';
@@ -71,19 +70,17 @@ const UserSettings = (props) => {
                                 required
                             />
                             <InputGroup.Append>
-                                <OverlayTrigger show={isMobile ? false : true} trigger="hover" placement="right" overlay={<Tooltip>Modify</Tooltip>}>
-                                    <Button
-                                        variant="hidden"
-                                        type="button"
-                                        onClick={() =>
-                                            dispatch({
-                                                type: 'modify',
-                                                modify: {username: false, email: state.modify.email},
-                                            })
-                                        }>
-                                        <BsPencil />
-                                    </Button>
-                                </OverlayTrigger>
+                                <Button
+                                    variant="hidden"
+                                    type="button"
+                                    onClick={() =>
+                                        dispatch({
+                                            type: 'modify',
+                                            modify: {username: false, email: state.modify.email},
+                                        })
+                                    }>
+                                    <BsPencil />
+                                </Button>
                             </InputGroup.Append>
                         </InputGroup>
                     </Form.Group>
@@ -100,19 +97,17 @@ const UserSettings = (props) => {
                                 required
                             />
                             <InputGroup.Append>
-                                <OverlayTrigger show={isMobile ? false : true} trigger="hover" placement="right" overlay={<Tooltip>Modify</Tooltip>}>
-                                    <Button
-                                        variant="hidden"
-                                        type="button"
-                                        onClick={() =>
-                                            dispatch({
-                                                type: 'modify',
-                                                modify: {email: false, username: state.modify.username},
-                                            })
-                                        }>
-                                        <BsPencil />
-                                    </Button>
-                                </OverlayTrigger>
+                                <Button
+                                    variant="hidden"
+                                    type="button"
+                                    onClick={() =>
+                                        dispatch({
+                                            type: 'modify',
+                                            modify: {email: false, username: state.modify.username},
+                                        })
+                                    }>
+                                    <BsPencil />
+                                </Button>
                             </InputGroup.Append>
                         </InputGroup>
                     </Form.Group>
