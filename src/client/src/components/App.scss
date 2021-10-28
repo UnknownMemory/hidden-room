@@ -9,6 +9,12 @@ body {
     color: #fff;
 }
 
+h1 {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
 /* Custom Theme */
 
 .error {

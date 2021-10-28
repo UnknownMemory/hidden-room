@@ -1,25 +1,24 @@
 import React, {useContext, useReducer, useEffect} from 'react';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
-import {BrowserRouter as Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
 import AuthService from '../../services/AuthService';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const Login = () => {
+    useDocumentTitle('Login / Hidden Room');
     const initState = {
         username: '',
         password: '',
+        error: '',
     };
 
     const user = useContext(UserContext);
 
     const [state, dispatch] = useReducer(LoginReducer, initState);
-
-    useEffect(() => {
-        document.title = 'Login / Hidden Room';
-    }, []);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -29,6 +28,10 @@ const Login = () => {
         formdata.append('password', state.password);
 
         let response = await AuthService.Login(formdata);
+        if (response['non_field_errors']) {
+            dispatch({type: 'error', error: response['non_field_errors'][0]});
+            return;
+        }
         Cookies.set('auth_token', response['token']);
         user.getUserDetail();
     };
@@ -60,19 +63,17 @@ const Login = () => {
                                 }
                                 required
                             />
-                            <a className="mt-2" href="#">
-                                Forgot your password?
-                            </a>
                         </Form.Group>
                         <Button variant="hidden" type="submit">
                             Login
                         </Button>
-                        <p className="mt-2">
-                            Don't have an account?
-                            <span>
-                                <Link to="/register">Register</Link>
-                            </span>
-                        </p>
+                        <Form.Text className="d-inline ml-2 error">{state.error === true ? '' : state.error}</Form.Text>
+                        <div className="mt-2">
+                            <p className="d-inline">Don't have an account?</p>
+                            <Link className="ml-1" to="/register">
+                                Register
+                            </Link>
+                        </div>
                     </Form>
                 </Col>
             </Row>

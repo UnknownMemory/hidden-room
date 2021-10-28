@@ -9,6 +9,7 @@ import Message from '../Message/Message';
 import UserContext from '../../contexts/UserContext';
 import ChatReducer from './ChatReducer';
 import ChatService from '../../services/ChatService';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const Chat = (props) => {
     const Chat = new ChatService();
@@ -25,6 +26,8 @@ const Chat = (props) => {
     };
 
     const [state, dispatch] = useReducer(ChatReducer, initState);
+
+    useDocumentTitle(state.room ? `${state.room.user2} & ${state.room.user1} / Hidden Room` : 'Hidden Room');
 
     const getChatrooms = async () => {
         let response = await Chat.getChatroom(props.roomID);
@@ -64,6 +67,7 @@ const Chat = (props) => {
 
     useEffect(() => {
         getChatrooms();
+
         Chat.getOldMessages(`${process.env.REACT_APP_API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
             dispatch({type: 'messages', messages: res.results.reverse()});
             dispatch({type: 'next', next: res.next});

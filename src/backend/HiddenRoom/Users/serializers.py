@@ -21,8 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
-        profile = Profile.objects.create(user=user)
 
+        Profile.objects.create(user=user)
         return user
 
     def validate(self, data):
@@ -35,9 +35,10 @@ class UserSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
 
         password = validated_data.get('password', None)
-        instance.set_password(password)
+        if(password != None):
+            instance.set_password(password)
+        
         instance.save()
-
         return instance
 
 

@@ -6,8 +6,11 @@ import AddFriend from '../AddFriend/AddFriend';
 import FriendListReducer from './FriendListReducer';
 import {useSwipeable} from 'react-swipeable';
 import UserService from '../../services/UserService';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const FriendList = () => {
+    useDocumentTitle('Friends / Hidden Room');
+
     const UserAPI = new UserService();
     const initState = {
         isOpen: false,
