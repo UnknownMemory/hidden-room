@@ -21,8 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
-        profile = Profile.objects.create(user=user)
 
+        Profile.objects.create(user=user)
         return user
 
     def validate(self, data):
