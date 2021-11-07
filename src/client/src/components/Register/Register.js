@@ -6,6 +6,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import RegisterReducer from './RegisterReducer';
 import AuthService from '../../services/AuthService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import passwordChecker from '../../utils/passwordChecker';
 
 const Register = () => {
     useDocumentTitle('Register / Hidden Room');
@@ -15,6 +16,10 @@ const Register = () => {
         password: '',
         confirm_password: '',
         error: {},
+        isPasswordValid: false,
+        isEmailValid: false,
+        isUsernameValid: false,
+        isPasswordMatching: false
     };
 
     const [state, dispatch] = useReducer(RegisterReducer, initState);
@@ -32,14 +37,45 @@ const Register = () => {
         return;
     };
 
+    const checkPassword = useDebouncedCallback(async (dispatch) => {
+        const isPasswordValid = passwordChecker(state.password);
+        if (isPasswordValid) {
+            dispatch({type: 'error', errorType: 'password', error: 'input-valid'});
+            dispatch({type: 'isPasswordValid', isPasswordValid: true});
+        } else {
+            dispatch({type: 'error', errorType: 'password', error: 'input-error'});
+            dispatch({type: 'isPasswordValid', isPasswordValid: false});
+        }
+    }, 800);
+
     const checkEmail = useDebouncedCallback(async (dispatch) => {
         const response = await AuthService.checkEmail(state.email);
         dispatch({type: 'error', errorType: 'email', error: response});
+        if(response != true){
+            dispatch({type: 'isEmailValid', isEmailValid: false});
+        } else {
+            dispatch({type: 'isEmailValid', isEmailValid: true});
+        }
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
         const response = await AuthService.checkUsername(state.username);
         dispatch({type: 'error', errorType: 'username', error: response});
+        if(response != true){
+            dispatch({type: 'isUsernameValid', isUsernameValid: false});
+        } else {
+            dispatch({type: 'isUsernameValid', isUsernameValid: true});
+        }
+    }, 800);
+
+    const passwordMatch = useDebouncedCallback(async (dispatch) => {
+        if (state.password === state.confirm_password) {
+            dispatch({type: 'error', errorType: 'confirm_password', error: 'input-valid'});
+            dispatch({type: 'isPasswordMatching', isPasswordMatching: true});
+        } else {
+            dispatch({type: 'error', errorType: 'confirm_password', error: 'input-error'});
+            dispatch({type: 'isPasswordMatching', isPasswordMatching: false});
+        }
     }, 800);
 
     return (
@@ -57,7 +93,7 @@ const Register = () => {
                                     checkEmail(dispatch);
                                 }}
                                 type="email"
-                                className={state.error.email !== true && state.email != '' ? 'input-error' : ''}
+                                className={state.email.length > 0 ? (state.isEmailValid ? 'input-valid' : 'input-error') : ''}
                                 required
                             />
                             <Form.Text className="error">
@@ -73,7 +109,7 @@ const Register = () => {
                                     checkUsername(dispatch);
                                 }}
                                 type="username"
-                                className={state.error.username !== true && state.username != '' ? 'input-error' : ''}
+                                className={state.username.length > 0 ? (state.isUsernameValid ? 'input-valid' : 'input-error') : ''}
                                 required
                             />
                             <Form.Text className="error">
@@ -84,34 +120,34 @@ const Register = () => {
                         <Form.Group controlId="password">
                             <Form.Label>Password</Form.Label>
                             <Form.Control
-                                onChange={(e) =>
+                                onChange={(e) => {
                                     dispatch({type: 'change', field: 'password', payload: e.currentTarget.value})
+                                    checkPassword(dispatch);
+                                    }
                                 }
                                 type="password"
+                                className={state.password.length > 0 ? state.error.password : ''}
                                 required
                             />
                             <Form.Text muted>
-                                Your password must be 8-20 characters long, contain letters and numbers, and must not
-                                contain spaces, or emoji.
+                                Your password must be 8-20 characters long and contain at least one number.
                             </Form.Text>
                         </Form.Group>
 
                         <Form.Group controlId="confirm_password">
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control
-                                onChange={(e) =>
-                                    dispatch({
-                                        type: 'change',
-                                        field: 'confirm_password',
-                                        payload: e.currentTarget.value,
-                                    })
-                                }
+                                onChange={(e) => {
+                                    dispatch({type: 'change', field: 'confirm_password', payload: e.currentTarget.value});
+                                    passwordMatch(dispatch);
+                                }}
                                 type="password"
+                                className={state.confirm_password.length > 0 ? state.error.confirm_password : ''}
                                 required
                             />
                         </Form.Group>
 
-                        <Button variant="hidden" type="submit">
+                        <Button variant="hidden" type="submit" disabled={state.isPasswordValid && state.isEmailValid && state.isUsernameValid && state.isPasswordMatching ? false : true}>
                             Register
                         </Button>
                         <div className="mt-2">
