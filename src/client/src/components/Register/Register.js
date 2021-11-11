@@ -35,10 +35,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        const req = await AuthService.Register(formdata);
-        console.log(req);
-        if(req.id){
-            console.log('success');
+        const res = await AuthService.Register(formdata);
+        if(res.id){;
             return history.push('/register/success');
         }
         return;

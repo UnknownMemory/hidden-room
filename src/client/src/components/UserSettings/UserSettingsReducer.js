@@ -18,6 +18,27 @@ const UserSettingsReducer = (state, action) => {
                 [action.field]: action.payload,
             };
         }
+        
+        case 'error': {
+            return {
+                ...state,
+                error: {...state.error, [action.errorType]: action.error},
+            };
+        }
+
+        case 'isPasswordValid': {
+            return {
+                ...state,
+                isPasswordValid: action.isPasswordValid,
+            };
+        }
+        
+        case 'isPasswordMatching': {
+            return {
+                ...state,
+                isPasswordMatching: action.isPasswordMatching,
+            };
+        }
     }
 };
 
