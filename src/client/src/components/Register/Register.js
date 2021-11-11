@@ -1,5 +1,5 @@
 import React, {useReducer} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {Container, Form, Button, Row, Col} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
 
@@ -10,6 +10,8 @@ import passwordChecker from '../../utils/passwordChecker';
 
 const Register = () => {
     useDocumentTitle('Register / Hidden Room');
+    let history = useHistory();
+
     const initState = {
         email: '',
         username: '',
@@ -33,7 +35,12 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        await AuthService.Register(formdata);
+        const req = await AuthService.Register(formdata);
+        console.log(req);
+        if(req.id){
+            console.log('success');
+            return history.push('/register/success');
+        }
         return;
     };
 
