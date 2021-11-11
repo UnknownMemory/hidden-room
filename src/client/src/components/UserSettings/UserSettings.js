@@ -1,13 +1,16 @@
 import React, {useEffect, useReducer} from 'react';
+import {useDebouncedCallback} from 'use-debounce';
 import {Modal, Button, Form, InputGroup} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
 
 import UserService from '../../services/UserService';
 import UserSettingsReducer from './UserSettingsReducer';
+import passwordChecker from '../../utils/passwordChecker';
 
 const UserSettings = (props) => {
     const UserAPI = new UserService();
+
     const initState = {
         detail: false,
         modify: {
@@ -18,6 +21,9 @@ const UserSettings = (props) => {
         email: '',
         newPassword: '',
         confirmPassword: '',
+        isPasswordValid: false,
+        isPasswordMatching: false,
+        error: {}
     };
 
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
@@ -26,6 +32,27 @@ const UserSettings = (props) => {
         let response = await UserAPI.getUserDetail();
         dispatch({type: 'detail', detail: response});
     };
+
+    const checkPassword = useDebouncedCallback(async (dispatch) => {
+        const isPasswordValid = passwordChecker(state.newPassword);
+        if (isPasswordValid) {
+            dispatch({type: 'error', errorType: 'newPassword', error: 'input-valid'});
+            dispatch({type: 'isPasswordValid', isPasswordValid: true});
+        } else {
+            dispatch({type: 'error', errorType: 'newPassword', error: 'input-error'});
+            dispatch({type: 'isPasswordValid', isPasswordValid: false});
+        }
+    }, 800);
+
+    const passwordMatch = useDebouncedCallback(async (dispatch) => {
+        if (state.newPassword === state.confirmPassword) {
+            dispatch({type: 'error', errorType: 'confirmPassword', error: 'input-valid'});
+            dispatch({type: 'isPasswordMatching', isPasswordMatching: true});
+        } else {
+            dispatch({type: 'error', errorType: 'confirmPassword', error: 'input-error'});
+            dispatch({type: 'isPasswordMatching', isPasswordMatching: false});
+        }
+    }, 800);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -38,8 +65,10 @@ const UserSettings = (props) => {
             formdata.append('email', state.email);
         }
 
-        //formdata.append('password', state.newPassword);
-        //formdata.append('confirm_password', state.confirmNewPassword);
+        if(state.isPasswordValid && state.isPasswordMatching) {
+            formdata.append('password', state.newPassword);
+            formdata.append('confirm_password', state.confirmPassword);
+        }
 
         await UserAPI.UpdateAccount(state.detail.id, formdata);
         props.handleModal();
@@ -113,24 +142,28 @@ const UserSettings = (props) => {
                     </Form.Group>
 
                     <Form.Group controlId="password">
-                        <Form.Label>Current Password</Form.Label>
+                        <Form.Label>New Password</Form.Label>
                         <Form.Control
                             type="password"
                             placeholder="New password"
-                            onChange={(e) =>
-                                dispatch({type: 'change', field: 'newPassword', payload: e.currentTarget.value})
-                            }
+                            onChange={(e) => {
+                                dispatch({type: 'change', field: 'newPassword', payload: e.currentTarget.value});
+                                checkPassword(dispatch);
+                            }}
+                            className={state.newPassword.length > 0 ? state.error.newPassword : ''}
                         />
                     </Form.Group>
 
                     <Form.Group controlId="confirm_password">
-                        <Form.Label>New Password</Form.Label>
+                        <Form.Label>Confirm New Password</Form.Label>
                         <Form.Control
                             type="password"
                             placeholder="Confirm new password"
-                            onChange={(e) =>
-                                dispatch({type: 'change', field: 'confirmPassword', payload: e.currentTarget.value})
-                            }
+                            onChange={(e) => {
+                                dispatch({type: 'change', field: 'confirmPassword', payload: e.currentTarget.value});
+                                passwordMatch(dispatch);
+                            }}
+                            className={state.confirmPassword.length > 0 ? state.error.confirmPassword : ''}
                         />
                     </Form.Group>
                 </Form>
@@ -143,7 +176,11 @@ const UserSettings = (props) => {
                 <Button
                     variant="hidden"
                     onClick={onSubmit}
-                    disabled={state.modify.username && state.modify.email ? true : false}>
+                    disabled={
+                        state.username || state.email || (state.isPasswordValid && state.isPasswordMatching)
+                            ? false
+                            : true
+                    }>
                     Save changes
                 </Button>
             </Modal.Footer>

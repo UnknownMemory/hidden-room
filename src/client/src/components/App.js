@@ -7,6 +7,7 @@ import PublicRoute from './CustomRoute/PublicRoute';
 
 import Login from './Login/Login';
 import Register from './Register/Register';
+import Registered from './Registered/Registered';
 import Main from './Main/Main';
 import NotFound from './NotFound/NotFound';
 import UserContext from '../contexts/UserContext';
@@ -32,6 +33,7 @@ const App = () => {
                     <Route exact path="/" render={() => <Redirect to="/login" />} />
                     <PublicRoute exact restricted="false" path="/login" component={Login} />
                     <PublicRoute exact restricted="false" path="/register" component={Register} />
+                    <PublicRoute exact restricted="false" path="/register/success" component={Registered} />
                     <PrivateRoute exact restricted="true" path="/app/room/:id(\d+|me)" component={Main} />
                     <Route exact path="*" component={NotFound} />
                 </Switch>

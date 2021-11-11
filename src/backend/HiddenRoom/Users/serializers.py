@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404, get_list_or_404
 
 from .models import Profile, Friend
 from Chat.models import PrivateChatroom

@@ -13,6 +13,34 @@ const RegisterReducer = (state, action) => {
                 error: {...state.error, [action.errorType]: action.error},
             };
         }
+
+        case 'isPasswordValid': {
+            return {
+                ...state,
+                isPasswordValid: action.isPasswordValid,
+            };
+        }
+
+        case 'isEmailValid': {
+            return {
+                ...state,
+                isEmailValid: action.isEmailValid,
+            };
+        }
+
+        case 'isUsernameValid': {
+            return {
+                ...state,
+                isUsernameValid: action.isUsernameValid,
+            };
+        }
+
+        case 'isPasswordMatching': {
+            return {
+                ...state,
+                isPasswordMatching: action.isPasswordMatching,
+            };
+        }
     }
 };
 
