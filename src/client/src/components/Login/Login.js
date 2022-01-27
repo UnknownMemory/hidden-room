@@ -1,5 +1,5 @@
-import React, {useContext, useReducer, useEffect} from 'react';
-import {Container, Form, Button, Row, Col} from 'react-bootstrap';
+import React, {useContext, useReducer} from 'react';
+import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -7,8 +7,11 @@ import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
 import AuthService from '../../services/AuthService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useAPI from '../../hooks/useAPI';
 
 const Login = () => {
+    const {post, isLoading, status, error} = useAPI();
+
     useDocumentTitle('Login / Hidden Room');
     const initState = {
         username: '',
@@ -27,15 +30,18 @@ const Login = () => {
         formdata.append('username', state.username);
         formdata.append('password', state.password);
 
-        let response = await AuthService.Login(formdata);
+        const response = await post('/auth/', formdata);
+        if(response != null){
+            Cookies.set('auth_token', response['token']);
+            user.getUserDetail();
+        }
         if (response['non_field_errors']) {
             dispatch({type: 'error', error: response['non_field_errors'][0]});
             return;
         }
-        Cookies.set('auth_token', response['token']);
-        user.getUserDetail();
-    };
+ 
 
+    };
     return (
         <Container className="d-flex justify-content-center align-items-center h-100" fluid>
             <Row>
@@ -65,6 +71,7 @@ const Login = () => {
                             />
                         </Form.Group>
                         <Button variant="hidden" type="submit">
+                            {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : null}
                             Login
                         </Button>
                         <Form.Text className="d-inline ml-2 error">{state.error === true ? '' : state.error}</Form.Text>
