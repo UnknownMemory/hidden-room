@@ -7,6 +7,7 @@ const useAPI = () => {
     const status = useRef(null);
 
     const request = async (method, url, body = null, headers = {}) => {
+        setError(null);
         setIsLoading(true);
         try {
             const res = await fetch(source + url, {body, headers: headers, method: method});

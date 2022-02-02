@@ -46,7 +46,7 @@ const Login = () => {
                     <h1>Hidden Room</h1>
                     <h2>Login</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
-                        {error ? <Form.Text className="error">{error}</Form.Text> : null}
+                        {error && <Form.Text className="error">{error}</Form.Text>}
                         <Form.Group controlId="username">
                             <Form.Label>Username</Form.Label>
                             <Form.Control
@@ -69,10 +69,7 @@ const Login = () => {
                             />
                         </Form.Group>
                         <Button variant="hidden" type="submit">
-                            {isLoading ? (
-                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                            ) : null}
-                            Login
+                            {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />: <span>Login</span>}
                         </Button>
                         <Form.Text className="d-inline ml-2 error">{state.error === true ? '' : state.error}</Form.Text>
                         <div className="mt-2">
