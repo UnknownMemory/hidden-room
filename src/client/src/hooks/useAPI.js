@@ -14,7 +14,7 @@ const useAPI = () => {
             status.current = res;
             return data;
         } catch(error) {
-            setError(error);
+            setError("Failed to send request");
         } finally {
             setIsLoading(false);
         }

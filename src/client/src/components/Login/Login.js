@@ -9,7 +9,7 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 
 const Login = () => {
-    const {post, isLoading, status} = useAPI();
+    const {post, isLoading, status, error} = useAPI();
 
     useDocumentTitle('Login / Hidden Room');
     const initState = {
@@ -46,6 +46,7 @@ const Login = () => {
                     <h1>Hidden Room</h1>
                     <h2>Login</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
+                        {error ? <Form.Text className="error">{error}</Form.Text> : null}
                         <Form.Group controlId="username">
                             <Form.Label>Username</Form.Label>
                             <Form.Control
