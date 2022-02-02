@@ -5,12 +5,11 @@ import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
-import AuthService from '../../services/AuthService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 
 const Login = () => {
-    const {post, isLoading, status, error} = useAPI();
+    const {post, isLoading, status} = useAPI();
 
     useDocumentTitle('Login / Hidden Room');
     const initState = {
@@ -31,16 +30,14 @@ const Login = () => {
         formdata.append('password', state.password);
 
         const response = await post('/auth/', formdata);
-        if(response != null){
+
+        if (status.current.ok) {
             Cookies.set('auth_token', response['token']);
             user.getUserDetail();
-        }
-        if (response['non_field_errors']) {
+        } else if (response['non_field_errors']) {
             dispatch({type: 'error', error: response['non_field_errors'][0]});
             return;
         }
- 
-
     };
     return (
         <Container className="d-flex justify-content-center align-items-center h-100" fluid>
@@ -71,7 +68,9 @@ const Login = () => {
                             />
                         </Form.Group>
                         <Button variant="hidden" type="submit">
-                            {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : null}
+                            {isLoading ? (
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                            ) : null}
                             Login
                         </Button>
                         <Form.Text className="d-inline ml-2 error">{state.error === true ? '' : state.error}</Form.Text>

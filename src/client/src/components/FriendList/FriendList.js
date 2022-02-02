@@ -1,5 +1,6 @@
 import React, {useReducer, useEffect} from 'react';
 import {Col, Navbar, Nav} from 'react-bootstrap';
+import Cookies from 'js-cookie';
 
 import Card from '../Card/Card';
 import AddFriend from '../AddFriend/AddFriend';
@@ -7,11 +8,12 @@ import FriendListReducer from './FriendListReducer';
 import {useSwipeable} from 'react-swipeable';
 import UserService from '../../services/UserService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useAPI from '../../hooks/useAPI';
 
 const FriendList = () => {
     useDocumentTitle('Friends / Hidden Room');
 
-    const UserAPI = new UserService();
+    const {get, isLoading, status} = new useAPI();
     const initState = {
         isOpen: false,
         friends: [],
@@ -26,8 +28,11 @@ const FriendList = () => {
     };
 
     const getFriends = async () => {
-        let response = await UserAPI.getFriends();
-        dispatch({type: 'get_friend', friends: response});
+        const token = Cookies.get('auth_token')
+        const response = await get("/account/friends/", null, {Authorization: `Token ${token}`});
+        if(status.current.ok){
+            dispatch({type: 'get_friend', friends: response});
+        }
     };
 
     const friends = state.friends.map((friend) => {
