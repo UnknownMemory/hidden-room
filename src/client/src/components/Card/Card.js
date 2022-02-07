@@ -3,14 +3,18 @@ import {Media, Button} from 'react-bootstrap';
 import {BsX, BsCheck} from 'react-icons/bs';
 import PropTypes from 'prop-types';
 import 'holderjs';
+import Cookies from 'js-cookie';
 
 import UserContext from '../../contexts/UserContext';
 import CardReducer from './CardReducer';
-import UserService from '../../services/UserService';
+import useAPI from '../../hooks/useAPI';
 
-const Card = (props) => {
-    const UserAPI = new UserService();
+const Card = (props) => {;
+    const {get, del, patch, status} = useAPI();
     const user = useContext(UserContext);
+
+    const token = Cookies.get('auth_token');
+
     const initState = {
         profile: null,
     };
@@ -19,14 +23,18 @@ const Card = (props) => {
 
     const getProfile = async (props) => {
         const id = props.friend.user_id != user.id ? props.friend.user2_id : props.friend.user_id;
-        const response = await UserAPI.getFriendProfile(id);
-   
-        dispatch({type: 'profile', profile: response});
+        const response = await get(`/account/friend/${id}/detail/`, null, {Authorization: `Token ${token}`});
+        if(status.current.ok){
+            dispatch({type: 'profile', profile: response});
+        }
+
     };
 
     const deleteFriend = async (props) => {
-        await UserAPI.deleteFriend(props.friend.id);
-        props.getFriends();
+        await del(`/account/friends/${props.friend.id}/`, null, {Authorization: `Token ${token}`});
+        if(status.current.ok){
+            props.getFriends();
+        }
     };
 
     const addFriend = async (props) => {
@@ -34,9 +42,11 @@ const Card = (props) => {
         formdata.append('user_id', props.friend.user_id);
         formdata.append('user2_id', props.friend.user2_id);
         formdata.append('relationship', 'FRIENDS');
-
-        await UserAPI.AcceptFriend(props.friend.id, formdata);
-        props.getFriends();
+       
+        await patch(`/account/friends/${props.friend.id}/update/`, formdata, {Authorization: `Token ${token}`})
+        if(status.current.ok){
+            props.getFriends();
+        }
     };
 
     const options = (props) => {

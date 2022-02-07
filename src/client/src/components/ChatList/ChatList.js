@@ -2,16 +2,19 @@ import React, {useContext, useEffect, useReducer, useCallback} from 'react';
 import {Col, Media, Navbar} from 'react-bootstrap';
 import {BsFillPersonFill} from 'react-icons/bs';
 import {useHistory} from 'react-router-dom';
-import ChatService from '../../services/ChatService';
 import 'holderjs';
+import Cookies from 'js-cookie';
 
 import Profile from '../Profile/Profile';
 
 import ChatListReducer from './ChatListReducer';
 import UserContext from '../../contexts/UserContext';
+import useAPI from '../../hooks/useAPI';
 
 const ChatList = () => {
-    const Chat = new ChatService();
+    const {get, status} = new useAPI();
+
+    const token = Cookies.get('auth_token');
     const user = useContext(UserContext);
     const initState = {
         rooms: [],
@@ -23,8 +26,10 @@ const ChatList = () => {
     const toRoom = useCallback((id) => history.push(`/app/room/${id}`), [history]);
 
     const getChatrooms = async () => {
-        const response = await Chat.getChatrooms();
-        dispatch({type: 'get_rooms', rooms: response});
+        const response = await get('/chat/private-chatrooms/', null, {Authorization: `Token ${token}`});
+        if(status.current.ok){
+            dispatch({type: 'get_rooms', rooms: response});
+        }
     };
 
     const rooms = state.rooms.map((room) => {

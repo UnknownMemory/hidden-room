@@ -3,13 +3,15 @@ import {useDebouncedCallback} from 'use-debounce';
 import {Modal, Button, Form, InputGroup} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
 
-import UserService from '../../services/UserService';
 import UserSettingsReducer from './UserSettingsReducer';
 import passwordChecker from '../../utils/passwordChecker';
+import useAPI from '../../hooks/useAPI';
 
 const UserSettings = (props) => {
-    const UserAPI = new UserService();
+    const {get, patch, status} = new useAPI();
+    const token = Cookies.get('auth_token');
 
     const initState = {
         detail: false,
@@ -23,14 +25,16 @@ const UserSettings = (props) => {
         confirmPassword: '',
         isPasswordValid: false,
         isPasswordMatching: false,
-        error: {}
+        error: {},
     };
 
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
 
     const getDetail = async () => {
-        let response = await UserAPI.getUserDetail();
-        dispatch({type: 'detail', detail: response});
+        let response = await get('/account/me/detail/', null, {Authorization: `Token ${token}`});
+        if (status.current.ok) {
+            dispatch({type: 'detail', detail: response});
+        }
     };
 
     const checkPassword = useDebouncedCallback(async (dispatch) => {
@@ -65,12 +69,12 @@ const UserSettings = (props) => {
             formdata.append('email', state.email);
         }
 
-        if(state.isPasswordValid && state.isPasswordMatching) {
+        if (state.isPasswordValid && state.isPasswordMatching) {
             formdata.append('password', state.newPassword);
             formdata.append('confirm_password', state.confirmPassword);
         }
 
-        await UserAPI.UpdateAccount(state.detail.id, formdata);
+        await patch(`/account/me/update/${state.detail.id}/`, formdata, {Authorization: `Token ${token}`});
         props.handleModal();
     };
 

@@ -6,7 +6,6 @@ import Card from '../Card/Card';
 import AddFriend from '../AddFriend/AddFriend';
 import FriendListReducer from './FriendListReducer';
 import {useSwipeable} from 'react-swipeable';
-import UserService from '../../services/UserService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 

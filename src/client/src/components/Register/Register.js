@@ -1,15 +1,18 @@
 import React, {useReducer} from 'react';
 import {Link, useHistory} from 'react-router-dom';
-import {Container, Form, Button, Row, Col} from 'react-bootstrap';
+import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
 
 import RegisterReducer from './RegisterReducer';
-import AuthService from '../../services/AuthService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import passwordChecker from '../../utils/passwordChecker';
+import useAPI from '../../hooks/useAPI';
 
 const Register = () => {
+    const {get, post, isLoading, status} = useAPI();
+
     useDocumentTitle('Register / Hidden Room');
+    
     let history = useHistory();
 
     const initState = {
@@ -35,8 +38,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        const res = await AuthService.Register(formdata);
-        if(res.id){;
+        await post('/account/create/', formdata)
+        if(status.current.ok){;
             return history.push('/register/success');
         }
         return;
@@ -54,7 +57,7 @@ const Register = () => {
     }, 800);
 
     const checkEmail = useDebouncedCallback(async (dispatch) => {
-        const response = await AuthService.checkEmail(state.email);
+        const response = await get(`/account/check/email/?email=${state.email}`);
         dispatch({type: 'error', errorType: 'email', error: response});
         if(response != true){
             dispatch({type: 'isEmailValid', isEmailValid: false});
@@ -64,7 +67,7 @@ const Register = () => {
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
-        const response = await AuthService.checkUsername(state.username);
+        const response = await get(`/account/check/username/?username=${state.username}`);
         dispatch({type: 'error', errorType: 'username', error: response});
         if(response != true){
             dispatch({type: 'isUsernameValid', isUsernameValid: false});
@@ -153,7 +156,7 @@ const Register = () => {
                         </Form.Group>
 
                         <Button variant="hidden" type="submit" disabled={state.isPasswordValid && state.isEmailValid && state.isUsernameValid && state.isPasswordMatching ? false : true}>
-                            Register
+                        {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />: <span>Register</span>}
                         </Button>
                         <div className="mt-2">
                             <p className="d-inline">Already have an account?</p>
