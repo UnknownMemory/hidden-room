@@ -12,6 +12,7 @@ import useAPI from '../../hooks/useAPI';
 const Card = (props) => {;
     const {get, del, patch, status} = useAPI();
     const user = useContext(UserContext);
+    console.log(user.user.id)
 
     const token = Cookies.get('auth_token');
 
@@ -22,7 +23,7 @@ const Card = (props) => {;
     const [state, dispatch] = useReducer(CardReducer, initState);
 
     const getProfile = async (props) => {
-        const id = props.friend.user_id != user.id ? props.friend.user2_id : props.friend.user_id;
+        const id = props.friend.user_id == user.user.id ? props.friend.user2_id : props.friend.user_id;
         const response = await get(`/account/friend/${id}/detail/`, null, {Authorization: `Token ${token}`});
         if(status.current.ok){
             dispatch({type: 'profile', profile: response});

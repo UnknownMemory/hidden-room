@@ -8,7 +8,7 @@ import useAPI from '../../hooks/useAPI';
 const AddFriend = () => {
     const token = Cookies.get('auth_token');
 
-    const {post, isLoading, status} = new useAPI();
+    const {post} = new useAPI();
     const [state, dispatch] = useReducer(AddFriendReducer, {username: ''});
 
     const onSubmit = async (e) => {
