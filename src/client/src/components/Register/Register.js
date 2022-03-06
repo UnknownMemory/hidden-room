@@ -2,6 +2,7 @@ import React, {useReducer} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
+import { useTranslation } from 'react-i18next';
 
 import RegisterReducer from './RegisterReducer';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
@@ -9,9 +10,10 @@ import passwordChecker from '../../utils/passwordChecker';
 import useAPI from '../../hooks/useAPI';
 
 const Register = () => {
+    const {t, i18n} = useTranslation();
     const {get, post, isLoading, status} = useAPI();
 
-    useDocumentTitle('Register / Hidden Room');
+    useDocumentTitle(`${t('register.title')} / Hidden Room`);
     
     let history = useHistory();
 
@@ -91,10 +93,10 @@ const Register = () => {
             <Row>
                 <Col className="text-center main-title">
                     <h1>Hidden Room</h1>
-                    <h2>Create an account</h2>
+                    <h2>{t('register.description')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
                         <Form.Group controlId="email">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>{t('common.form.email')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
                                     dispatch({type: 'change', field: 'email', payload: e.currentTarget.value});
@@ -110,7 +112,7 @@ const Register = () => {
                         </Form.Group>
 
                         <Form.Group controlId="username">
-                            <Form.Label>Username</Form.Label>
+                            <Form.Label>{t('common.form.username')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
                                     dispatch({type: 'change', field: 'username', payload: e.currentTarget.value});
@@ -126,7 +128,7 @@ const Register = () => {
                         </Form.Group>
 
                         <Form.Group controlId="password">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label>{t('common.form.password')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
                                     dispatch({type: 'change', field: 'password', payload: e.currentTarget.value})
@@ -138,12 +140,12 @@ const Register = () => {
                                 required
                             />
                             <Form.Text muted>
-                                Your password must be 8-20 characters long and contain at least one number.
+                                {t('register.passwordValidation')}
                             </Form.Text>
                         </Form.Group>
 
                         <Form.Group controlId="confirm_password">
-                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Label>{t('register.confirmPassword')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
                                     dispatch({type: 'change', field: 'confirm_password', payload: e.currentTarget.value});
@@ -156,12 +158,12 @@ const Register = () => {
                         </Form.Group>
 
                         <Button variant="hidden" type="submit" disabled={state.isPasswordValid && state.isEmailValid && state.isUsernameValid && state.isPasswordMatching ? false : true}>
-                        {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />: <span>Register</span>}
+                        {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />: <span>{t('register.title')}</span>}
                         </Button>
                         <div className="mt-2">
-                            <p className="d-inline">Already have an account?</p>
+                            <p className="d-inline">{t('register.accountExist')}</p>
                             <Link className="ml-1" to="/login">
-                                Login
+                                {t('login.title')}
                             </Link>
                         </div>
                     </Form>

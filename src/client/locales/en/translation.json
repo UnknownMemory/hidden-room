@@ -1,0 +1,23 @@
+{
+    "common": {
+        "form": {
+            "email": "email",
+            "username": "username",
+            "password": "password"
+        }    
+    },
+
+    "login": {
+        "title": "Login",
+        "noAccount": "Don't have an account?"
+    },
+
+    "register": {
+        "title": "Register",
+        "description": "Create an Account",
+        "accountExist": "Already have an account?",
+        "confirmPassword": "confirm password",
+        "passwordValidation": "Your password must be 8-20 characters long and contain at least one number."
+    }
+    
+}

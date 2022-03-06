@@ -12,8 +12,6 @@ import useAPI from '../../hooks/useAPI';
 const Card = (props) => {;
     const {get, del, patch, status} = useAPI();
     const user = useContext(UserContext);
-    console.log(user.user.id)
-
     const token = Cookies.get('auth_token');
 
     const initState = {
