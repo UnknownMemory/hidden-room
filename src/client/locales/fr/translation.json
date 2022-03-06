@@ -1,0 +1,23 @@
+{
+    "common": {
+        "form": {
+            "email": "email",
+            "username": "nom d'utilisateur",
+            "password": "mot de passe"
+        }    
+    },
+
+    "login": {
+        "title": "Se connecter",
+        "noAccount": "Vous n'avez pas de compte ?"
+    },
+
+    "register": {
+        "title": "S'inscrire",
+        "description": "Créer un compte",
+        "accountExist": "Vous avez déjà un compte ?",
+        "confirmPassword": "Confirmation du mot de passe",
+        "passwordValidation": "Votre mot de passe doit être composé de 8 à 20 caractères et contenir au moins un chiffre."
+    }
+    
+}
