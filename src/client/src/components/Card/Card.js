@@ -9,7 +9,7 @@ import UserContext from '../../contexts/UserContext';
 import CardReducer from './CardReducer';
 import useAPI from '../../hooks/useAPI';
 
-const Card = (props) => {;
+const Card = (props) => {
     const {get, del, patch, status} = useAPI();
     const user = useContext(UserContext);
     const token = Cookies.get('auth_token');
@@ -23,15 +23,14 @@ const Card = (props) => {;
     const getProfile = async (props) => {
         const id = props.friend.user_id == user.user.id ? props.friend.user2_id : props.friend.user_id;
         const response = await get(`/account/friend/${id}/detail/`, null, {Authorization: `Token ${token}`});
-        if(status.current.ok){
+        if (status.current.ok) {
             dispatch({type: 'profile', profile: response});
         }
-
     };
 
     const deleteFriend = async (props) => {
         await del(`/account/friends/${props.friend.id}/`, null, {Authorization: `Token ${token}`});
-        if(status.current.ok){
+        if (status.current.ok) {
             props.getFriends();
         }
     };
@@ -41,9 +40,9 @@ const Card = (props) => {;
         formdata.append('user_id', props.friend.user_id);
         formdata.append('user2_id', props.friend.user2_id);
         formdata.append('relationship', 'FRIENDS');
-       
-        await patch(`/account/friends/${props.friend.id}/update/`, formdata, {Authorization: `Token ${token}`})
-        if(status.current.ok){
+
+        await patch(`/account/friends/${props.friend.id}/update/`, formdata, {Authorization: `Token ${token}`});
+        if (status.current.ok) {
             props.getFriends();
         }
     };

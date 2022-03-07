@@ -1,8 +1,10 @@
 import React, {useContext, useReducer} from 'react';
 import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import Cookies from 'js-cookie';
+
+import LangSelector from '../LangSelector/LangSelector';
 
 import UserContext from '../../contexts/UserContext';
 import LoginReducer from './LoginReducer';
@@ -13,7 +15,7 @@ const Login = () => {
     const {t, i18n} = useTranslation();
     const {post, isLoading, status, error} = useAPI();
     useDocumentTitle(`${t('login.title')} / Hidden Room`);
-    
+
     const initState = {
         username: '',
         password: '',
@@ -42,9 +44,10 @@ const Login = () => {
         }
     };
     return (
-        <Container className="d-flex justify-content-center align-items-center h-100" fluid>
-            <Row>
-                <Col className="text-center main-title">
+        //d-flex justify-content-center align-items-center h-100 flex-column
+        <Container fluid>
+            <Row className="justify-content-center mt-auto">
+                <Col md={4} className="text-center main-title">
                     <h1>Hidden Room</h1>
                     <h2>{t('login.title')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
@@ -71,7 +74,11 @@ const Login = () => {
                             />
                         </Form.Group>
                         <Button variant="hidden" type="submit">
-                            {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />: <span>{t('login.title')}</span>}
+                            {isLoading ? (
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                            ) : (
+                                <span>{t('login.title')}</span>
+                            )}
                         </Button>
                         <Form.Text className="d-inline ml-2 error">{state.error === true ? '' : state.error}</Form.Text>
                         <div className="mt-2">
@@ -81,6 +88,11 @@ const Login = () => {
                             </Link>
                         </div>
                     </Form>
+                </Col>
+            </Row>
+            <Row className="mt-auto justify-content-end">
+                <Col md={1}>
+                    <LangSelector></LangSelector>
                 </Col>
             </Row>
         </Container>
