@@ -4,6 +4,8 @@ import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
 import { useTranslation } from 'react-i18next';
 
+import LangSelector from '../LangSelector/LangSelector';
+
 import RegisterReducer from './RegisterReducer';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import passwordChecker from '../../utils/passwordChecker';
@@ -89,9 +91,9 @@ const Register = () => {
     }, 800);
 
     return (
-        <Container className="d-flex justify-content-center align-items-center h-100" fluid>
-            <Row>
-                <Col className="text-center main-title">
+        <Container className="h-100" fluid>
+            <Row className="h-100 justify-content-center">
+                <Col md={3} className="text-center main-title align-self-center">
                     <h1>Hidden Room</h1>
                     <h2>{t('register.description')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
@@ -167,6 +169,9 @@ const Register = () => {
                             </Link>
                         </div>
                     </Form>
+                </Col>
+                <Col className="lang-select position-absolute" md={1}>
+                    <LangSelector></LangSelector>
                 </Col>
             </Row>
         </Container>

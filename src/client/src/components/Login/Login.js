@@ -44,10 +44,9 @@ const Login = () => {
         }
     };
     return (
-        //d-flex justify-content-center align-items-center h-100 flex-column
-        <Container fluid>
-            <Row className="justify-content-center mt-auto">
-                <Col md={4} className="text-center main-title">
+        <Container className="h-100" fluid>
+            <Row className="h-100 justify-content-center">
+                <Col md={3} className="text-center main-title align-self-center">
                     <h1>Hidden Room</h1>
                     <h2>{t('login.title')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
@@ -89,9 +88,7 @@ const Login = () => {
                         </div>
                     </Form>
                 </Col>
-            </Row>
-            <Row className="mt-auto justify-content-end">
-                <Col md={1}>
+                <Col className="lang-select position-absolute" md={1}>
                     <LangSelector></LangSelector>
                 </Col>
             </Row>
