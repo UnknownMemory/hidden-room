@@ -1,6 +1,7 @@
 import React, {useContext, useReducer, useEffect} from 'react';
 import {Button, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import {BsGearFill, BsArrowBarRight} from 'react-icons/bs';
+import {useTranslation} from 'react-i18next';
 import Cookies from 'js-cookie';
 import 'holderjs';
 
@@ -10,6 +11,7 @@ import UserContext from '../../contexts/UserContext';
 import ProfileReducer from './ProfileReducer';
 
 const Profile = () => {
+    const {t, i18n} = useTranslation();
     const initState = {
         modal: false,
     };
@@ -42,12 +44,12 @@ const Profile = () => {
             </div>
             <div className="username">{user.user.username}</div>
             <div className="options">
-                <OverlayTrigger placement="top" overlay={<Tooltip>Settings</Tooltip>}>
+                <OverlayTrigger placement="top" overlay={<Tooltip>{t('settings.title')}</Tooltip>}>
                     <Button variant="hidden-profile" onClick={handleModal}>
                         <BsGearFill size={18} />
                     </Button>
                 </OverlayTrigger>
-                <OverlayTrigger placement="top" overlay={<Tooltip>Log Out</Tooltip>}>
+                <OverlayTrigger placement="top" overlay={<Tooltip>{t('profile.logOut')}</Tooltip>}>
                     <Button variant="hidden-profile" onClick={logout}>
                         <BsArrowBarRight size={18} />
                     </Button>

@@ -1,10 +1,45 @@
 {
     "common": {
+        "friends": "Friends",
         "form": {
             "email": "email",
             "username": "username",
-            "password": "password"
-        }    
+            "password": "password",
+            "send": "Send"
+        }
+    },
+
+    "chat": {
+        "title": "Messages",
+        "form": {
+            "placeholder": "Message"
+        }
+    },
+
+    "relationship": {
+        "pending": "Pending",
+        "blocked": "Blocked",
+        "addFriend": {
+            "title": "Add Friend",
+            "description": "You can add a friend with their username.",
+            "sendRequest": "Send request"
+        }
+    },
+
+    "profile": {
+        "logOut": "Log Out"
+    },
+
+    "settings": {
+        "title": "Settings",
+        "form": {
+            "newPassword": "New password",
+            "confirmNewPassword": "Confirm new password"
+        },
+        "modal": {
+            "close": "Close",
+            "saveChanges": "Save changes"
+        }
     },
 
     "login": {
@@ -18,6 +53,10 @@
         "accountExist": "Already have an account?",
         "confirmPassword": "confirm password",
         "passwordValidation": "Your password must be 8-20 characters long and contain at least one number."
+    },
+
+    "registered": {
+        "message": "You're now registered to Hidden Room"
     }
     
 }

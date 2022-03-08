@@ -1,10 +1,45 @@
 {
     "common": {
+        "friends": "Amis",
         "form": {
             "email": "email",
-            "username": "nom d'utilisateur",
-            "password": "mot de passe"
+            "username": "Nom d'utilisateur",
+            "password": "mot de passe",
+            "send": "Envoyer"
         }    
+    },
+
+    "chat": {
+        "title": "Messages",
+        "form": {
+            "placeholder": "Message"
+        }
+    },
+
+    "relationship": {
+        "pending": "En attente",
+        "blocked": "Bloqué",
+        "addFriend": {
+            "title": "Ajouter un ami",
+            "description": "Vous pouvez ajouter un ami avec leur nom d'utilisateur.",
+            "sendRequest": "Envoyer une demande d'ami"
+        }
+    },
+
+    "profile": {
+        "logOut": "Se déconnecter"
+    },
+
+    "settings": {
+        "title": "Paramètres",
+        "form": {
+            "newPassword": "Nouveau mot de passe",
+            "confirmNewPassword": "Confirmer le nouveau mot de passe"
+        },
+        "modal": {
+            "close": "Fermer",
+            "saveChanges": "Sauvegarder les changements"
+        }
     },
 
     "login": {
@@ -18,6 +53,10 @@
         "accountExist": "Vous avez déjà un compte ?",
         "confirmPassword": "Confirmation du mot de passe",
         "passwordValidation": "Votre mot de passe doit être composé de 8 à 20 caractères et contenir au moins un chiffre."
+    },
+
+    "registered": {
+        "message": "Vous êtes maintenant inscrit sur Hidden Room."
     }
     
 }

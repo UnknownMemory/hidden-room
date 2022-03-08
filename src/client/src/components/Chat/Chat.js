@@ -2,6 +2,7 @@ import React, {useReducer, useEffect, useContext, useRef} from 'react';
 import {Col, Navbar, InputGroup, Button, FormControl} from 'react-bootstrap';
 import {useSwipeable} from 'react-swipeable';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 import Cookies from 'js-cookie';
 
 import Message from '../Message/Message';
@@ -12,6 +13,7 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 
 const Chat = (props) => {
+    const {t, i18n} = useTranslation();
     const {get, status} = new useAPI();
     const token = Cookies.get('auth_token');
     
@@ -122,7 +124,7 @@ const Chat = (props) => {
             </div>
             <InputGroup className="p-3">
                 <FormControl
-                    placeholder="Message"
+                    placeholder={t('chat.form.placeholder')}
                     onChange={(e) => dispatch({type: 'message', field: 'message', message: e.currentTarget.value})}
                     aria-label="Message"
                     aria-describedby="message-input"
@@ -130,7 +132,7 @@ const Chat = (props) => {
                 />
                 <InputGroup.Append>
                     <Button variant="hidden" onClick={sendMessage}>
-                        Send
+                        {t('common.form.send')}
                     </Button>
                 </InputGroup.Append>
             </InputGroup>

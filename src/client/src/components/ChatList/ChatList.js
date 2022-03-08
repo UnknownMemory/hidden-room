@@ -3,6 +3,7 @@ import {Col, Media, Navbar} from 'react-bootstrap';
 import {BsFillPersonFill} from 'react-icons/bs';
 import {useHistory} from 'react-router-dom';
 import 'holderjs';
+import {useTranslation} from 'react-i18next';
 import Cookies from 'js-cookie';
 
 import Profile from '../Profile/Profile';
@@ -12,6 +13,7 @@ import UserContext from '../../contexts/UserContext';
 import useAPI from '../../hooks/useAPI';
 
 const ChatList = () => {
+    const {t, i18n} = useTranslation();
     const {get, status} = new useAPI();
 
     const token = Cookies.get('auth_token');
@@ -49,13 +51,13 @@ const ChatList = () => {
     return (
         <Col md="2" xs="9" className="chats h-100">
             <Navbar variant="dark" className="justify-content-between align-items-center">
-                <Navbar.Brand>Messages</Navbar.Brand>
+                <Navbar.Brand>{t('chat.title')}</Navbar.Brand>
             </Navbar>
             <ul className="chat-list list-unstyled">
                 <Media as="li" onClick={() => toRoom('me')}>
                     <Media.Body>
                         <BsFillPersonFill size={20} />
-                        <h6>Friends</h6>
+                        <h6>{t('common.friends')}</h6>
                     </Media.Body>
                 </Media>
                 {rooms}
