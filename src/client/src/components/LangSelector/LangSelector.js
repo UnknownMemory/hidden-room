@@ -13,7 +13,7 @@ const LangSelector = () => {
 
     return (
         <Form.Group controlId="lang">
-            <Form.Control as="select" defaultValue="en" onChange={(e) => changLang(e.target.value)} value={localStorage.getItem('lang')}>
+            <Form.Control as="select" onChange={(e) => changLang(e.target.value)} value={localStorage.getItem('lang')}>
                 <option value="en">EN</option>
                 <option value="fr">FR</option>
             </Form.Control>

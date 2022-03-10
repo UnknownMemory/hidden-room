@@ -93,7 +93,7 @@ const Register = () => {
     return (
         <Container className="h-100" fluid>
             <Row className="h-100 justify-content-center">
-                <Col md={3} className="text-center main-title align-self-center">
+                <Col xl={3} lg={4} md={6} className="text-center main-title align-self-center">
                     <h1>Hidden Room</h1>
                     <h2>{t('register.description')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
@@ -170,7 +170,7 @@ const Register = () => {
                         </div>
                     </Form>
                 </Col>
-                <Col className="lang-select position-absolute" md={1}>
+                <Col className="lang-select position-absolute" lg={1} md={2} sm={2} xs={4}>
                     <LangSelector></LangSelector>
                 </Col>
             </Row>

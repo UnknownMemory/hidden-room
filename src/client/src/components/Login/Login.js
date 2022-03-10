@@ -46,7 +46,7 @@ const Login = () => {
     return (
         <Container className="h-100" fluid>
             <Row className="h-100 justify-content-center">
-                <Col md={3} className="text-center main-title align-self-center">
+                <Col xl={3} lg={4} md={6} className="text-center main-title align-self-center">
                     <h1>Hidden Room</h1>
                     <h2>{t('login.title')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
