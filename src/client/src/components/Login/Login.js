@@ -12,7 +12,7 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 
 const Login = () => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const {post, isLoading, status, error} = useAPI();
     useDocumentTitle(`${t('login.title')} / Hidden Room`);
 

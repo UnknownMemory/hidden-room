@@ -13,7 +13,7 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 
 const Chat = (props) => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const {get, status} = new useAPI();
     const token = Cookies.get('auth_token');
     

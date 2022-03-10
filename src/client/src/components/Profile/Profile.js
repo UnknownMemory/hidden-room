@@ -11,7 +11,7 @@ import UserContext from '../../contexts/UserContext';
 import ProfileReducer from './ProfileReducer';
 
 const Profile = () => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const initState = {
         modal: false,
     };

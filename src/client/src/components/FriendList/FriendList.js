@@ -11,7 +11,7 @@ import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useAPI from '../../hooks/useAPI';
 
 const FriendList = () => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     useDocumentTitle(`${t('common.friends')} / Hidden Room`);
 
     const {get, isLoading, status} = new useAPI();

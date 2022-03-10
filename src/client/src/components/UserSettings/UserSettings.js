@@ -11,7 +11,7 @@ import passwordChecker from '../../utils/passwordChecker';
 import useAPI from '../../hooks/useAPI';
 
 const UserSettings = (props) => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const {get, patch, status} = new useAPI();
     const token = Cookies.get('auth_token');
 

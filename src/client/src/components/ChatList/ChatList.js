@@ -13,7 +13,7 @@ import UserContext from '../../contexts/UserContext';
 import useAPI from '../../hooks/useAPI';
 
 const ChatList = () => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const {get, status} = new useAPI();
 
     const token = Cookies.get('auth_token');

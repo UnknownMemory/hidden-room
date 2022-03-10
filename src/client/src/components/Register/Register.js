@@ -2,7 +2,7 @@ import React, {useReducer} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import LangSelector from '../LangSelector/LangSelector';
 
@@ -12,11 +12,11 @@ import passwordChecker from '../../utils/passwordChecker';
 import useAPI from '../../hooks/useAPI';
 
 const Register = () => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const {get, post, isLoading, status} = useAPI();
 
     useDocumentTitle(`${t('register.title')} / Hidden Room`);
-    
+
     let history = useHistory();
 
     const initState = {
@@ -28,7 +28,7 @@ const Register = () => {
         isPasswordValid: false,
         isEmailValid: false,
         isUsernameValid: false,
-        isPasswordMatching: false
+        isPasswordMatching: false,
     };
 
     const [state, dispatch] = useReducer(RegisterReducer, initState);
@@ -42,8 +42,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        await post('/account/create/', formdata)
-        if(status.current.ok){;
+        await post('/account/create/', formdata);
+        if (status.current.ok) {
             return history.push('/register/success');
         }
         return;
@@ -63,7 +63,7 @@ const Register = () => {
     const checkEmail = useDebouncedCallback(async (dispatch) => {
         const response = await get(`/account/check/email/?email=${state.email}`);
         dispatch({type: 'error', errorType: 'email', error: response});
-        if(response != true){
+        if (response != true) {
             dispatch({type: 'isEmailValid', isEmailValid: false});
         } else {
             dispatch({type: 'isEmailValid', isEmailValid: true});
@@ -73,7 +73,7 @@ const Register = () => {
     const checkUsername = useDebouncedCallback(async (dispatch) => {
         const response = await get(`/account/check/username/?username=${state.username}`);
         dispatch({type: 'error', errorType: 'username', error: response});
-        if(response != true){
+        if (response != true) {
             dispatch({type: 'isUsernameValid', isUsernameValid: false});
         } else {
             dispatch({type: 'isUsernameValid', isUsernameValid: true});
@@ -105,7 +105,9 @@ const Register = () => {
                                     checkEmail(dispatch);
                                 }}
                                 type="email"
-                                className={state.email.length > 0 ? (state.isEmailValid ? 'input-valid' : 'input-error') : ''}
+                                className={
+                                    state.email.length > 0 ? (state.isEmailValid ? 'input-valid' : 'input-error') : ''
+                                }
                                 required
                             />
                             <Form.Text className="error">
@@ -121,7 +123,13 @@ const Register = () => {
                                     checkUsername(dispatch);
                                 }}
                                 type="username"
-                                className={state.username.length > 0 ? (state.isUsernameValid ? 'input-valid' : 'input-error') : ''}
+                                className={
+                                    state.username.length > 0
+                                        ? state.isUsernameValid
+                                            ? 'input-valid'
+                                            : 'input-error'
+                                        : ''
+                                }
                                 required
                             />
                             <Form.Text className="error">
@@ -133,24 +141,25 @@ const Register = () => {
                             <Form.Label>{t('common.form.password')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
-                                    dispatch({type: 'change', field: 'password', payload: e.currentTarget.value})
+                                    dispatch({type: 'change', field: 'password', payload: e.currentTarget.value});
                                     checkPassword(dispatch);
-                                    }
-                                }
+                                }}
                                 type="password"
                                 className={state.password.length > 0 ? state.error.password : ''}
                                 required
                             />
-                            <Form.Text muted>
-                                {t('register.passwordValidation')}
-                            </Form.Text>
+                            <Form.Text muted>{t('register.passwordValidation')}</Form.Text>
                         </Form.Group>
 
                         <Form.Group controlId="confirm_password">
                             <Form.Label>{t('register.confirmPassword')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
-                                    dispatch({type: 'change', field: 'confirm_password', payload: e.currentTarget.value});
+                                    dispatch({
+                                        type: 'change',
+                                        field: 'confirm_password',
+                                        payload: e.currentTarget.value,
+                                    });
                                     passwordMatch(dispatch);
                                 }}
                                 type="password"
@@ -159,8 +168,22 @@ const Register = () => {
                             />
                         </Form.Group>
 
-                        <Button variant="hidden" type="submit" disabled={state.isPasswordValid && state.isEmailValid && state.isUsernameValid && state.isPasswordMatching ? false : true}>
-                        {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />: <span>{t('register.title')}</span>}
+                        <Button
+                            variant="hidden"
+                            type="submit"
+                            disabled={
+                                state.isPasswordValid &&
+                                state.isEmailValid &&
+                                state.isUsernameValid &&
+                                state.isPasswordMatching
+                                    ? false
+                                    : true
+                            }>
+                            {isLoading ? (
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                            ) : (
+                                <span>{t('register.title')}</span>
+                            )}
                         </Button>
                         <div className="mt-2">
                             <p className="d-inline">{t('register.accountExist')}</p>
