@@ -1,17 +1,20 @@
 import React, {useReducer, useEffect} from 'react';
 import {Col, Navbar, Nav} from 'react-bootstrap';
+import {useTranslation} from 'react-i18next';
+import Cookies from 'js-cookie';
 
 import Card from '../Card/Card';
 import AddFriend from '../AddFriend/AddFriend';
 import FriendListReducer from './FriendListReducer';
 import {useSwipeable} from 'react-swipeable';
-import UserService from '../../services/UserService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useAPI from '../../hooks/useAPI';
 
 const FriendList = () => {
-    useDocumentTitle('Friends / Hidden Room');
+    const {t} = useTranslation();
+    useDocumentTitle(`${t('common.friends')} / Hidden Room`);
 
-    const UserAPI = new UserService();
+    const {get, isLoading, status} = new useAPI();
     const initState = {
         isOpen: false,
         friends: [],
@@ -26,8 +29,11 @@ const FriendList = () => {
     };
 
     const getFriends = async () => {
-        let response = await UserAPI.getFriends();
-        dispatch({type: 'get_friend', friends: response});
+        const token = Cookies.get('auth_token');
+        const response = await get('/account/friends/', null, {Authorization: `Token ${token}`});
+        if (status.current.ok) {
+            dispatch({type: 'get_friend', friends: response});
+        }
     };
 
     const friends = state.friends.map((friend) => {
@@ -51,19 +57,19 @@ const FriendList = () => {
     return (
         <Col md="10" xs="12" className={`friend-list h-100 bg-dark ${state.isOpen ? 'open' : ''}`} {...handlers}>
             <Navbar bg="dark" variant="dark" className="justify-content-between align-items-center">
-                <Navbar.Brand className="d-none d-sm-block">Friends</Navbar.Brand>
+                <Navbar.Brand className="d-none d-sm-block">{t('common.friends')}</Navbar.Brand>
                 <Nav variant="pills" defaultActiveKey="friends" onSelect={handleSelect}>
                     <Nav.Item>
-                        <Nav.Link eventKey="friends">Friends</Nav.Link>
+                        <Nav.Link eventKey="friends">{t('common.friends')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="pending">Pending</Nav.Link>
+                        <Nav.Link eventKey="pending">{t('relationship.pending')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="blocked">Blocked</Nav.Link>
+                        <Nav.Link eventKey="blocked">{t('relationship.blocked')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="add_friend">Add Friend</Nav.Link>
+                        <Nav.Link eventKey="add_friend">{t('relationship.addFriend.title')}</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 <div className="mobile-menu d-block d-sm-none" onClick={() => dispatch({type: 'isOpen'})}>

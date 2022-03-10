@@ -3,13 +3,17 @@ import {useDebouncedCallback} from 'use-debounce';
 import {Modal, Button, Form, InputGroup} from 'react-bootstrap';
 import {BsPencil} from 'react-icons/bs';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
+import Cookies from 'js-cookie';
 
-import UserService from '../../services/UserService';
 import UserSettingsReducer from './UserSettingsReducer';
 import passwordChecker from '../../utils/passwordChecker';
+import useAPI from '../../hooks/useAPI';
 
 const UserSettings = (props) => {
-    const UserAPI = new UserService();
+    const {t} = useTranslation();
+    const {get, patch, status} = new useAPI();
+    const token = Cookies.get('auth_token');
 
     const initState = {
         detail: false,
@@ -23,14 +27,16 @@ const UserSettings = (props) => {
         confirmPassword: '',
         isPasswordValid: false,
         isPasswordMatching: false,
-        error: {}
+        error: {},
     };
 
     const [state, dispatch] = useReducer(UserSettingsReducer, initState);
 
     const getDetail = async () => {
-        let response = await UserAPI.getUserDetail();
-        dispatch({type: 'detail', detail: response});
+        let response = await get('/account/me/detail/', null, {Authorization: `Token ${token}`});
+        if (status.current.ok) {
+            dispatch({type: 'detail', detail: response});
+        }
     };
 
     const checkPassword = useDebouncedCallback(async (dispatch) => {
@@ -65,12 +71,12 @@ const UserSettings = (props) => {
             formdata.append('email', state.email);
         }
 
-        if(state.isPasswordValid && state.isPasswordMatching) {
+        if (state.isPasswordValid && state.isPasswordMatching) {
             formdata.append('password', state.newPassword);
             formdata.append('confirm_password', state.confirmPassword);
         }
 
-        await UserAPI.UpdateAccount(state.detail.id, formdata);
+        await patch(`/account/me/update/${state.detail.id}/`, formdata, {Authorization: `Token ${token}`});
         props.handleModal();
     };
 
@@ -81,13 +87,13 @@ const UserSettings = (props) => {
     return (
         <Modal show={props.show} onHide={props.handleModal}>
             <Modal.Header closeButton>
-                <Modal.Title>Settings</Modal.Title>
+                <Modal.Title>{t('settings.title')}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <Form>
                     <Form.Group controlId="username">
-                        <Form.Label>Usermame</Form.Label>
+                        <Form.Label>{t('common.form.username')}</Form.Label>
                         <InputGroup>
                             <Form.Control
                                 type="text"
@@ -114,7 +120,7 @@ const UserSettings = (props) => {
                         </InputGroup>
                     </Form.Group>
                     <Form.Group controlId="email">
-                        <Form.Label>Email address</Form.Label>
+                        <Form.Label>{t('common.form.email')}</Form.Label>
                         <InputGroup>
                             <Form.Control
                                 type="email"
@@ -142,10 +148,10 @@ const UserSettings = (props) => {
                     </Form.Group>
 
                     <Form.Group controlId="password">
-                        <Form.Label>New Password</Form.Label>
+                        <Form.Label>{t('settings.form.newPassword')}</Form.Label>
                         <Form.Control
                             type="password"
-                            placeholder="New password"
+                            placeholder={t('settings.form.newPassword')}
                             onChange={(e) => {
                                 dispatch({type: 'change', field: 'newPassword', payload: e.currentTarget.value});
                                 checkPassword(dispatch);
@@ -155,10 +161,10 @@ const UserSettings = (props) => {
                     </Form.Group>
 
                     <Form.Group controlId="confirm_password">
-                        <Form.Label>Confirm New Password</Form.Label>
+                        <Form.Label>{t('settings.form.confirmNewPassword')}</Form.Label>
                         <Form.Control
                             type="password"
-                            placeholder="Confirm new password"
+                            placeholder={t('settings.form.confirmNewPassword')}
                             onChange={(e) => {
                                 dispatch({type: 'change', field: 'confirmPassword', payload: e.currentTarget.value});
                                 passwordMatch(dispatch);
@@ -171,7 +177,7 @@ const UserSettings = (props) => {
 
             <Modal.Footer>
                 <Button variant="hidden" onClick={props.handleModal}>
-                    Close
+                    {t('settings.modal.close')}
                 </Button>
                 <Button
                     variant="hidden"
@@ -181,7 +187,7 @@ const UserSettings = (props) => {
                             ? false
                             : true
                     }>
-                    Save changes
+                    {t('settings.modal.saveChanges')}
                 </Button>
             </Modal.Footer>
         </Modal>

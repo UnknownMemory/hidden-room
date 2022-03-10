@@ -58,12 +58,12 @@ class FriendViewSet(viewsets.ModelViewSet):
         data['user_id'] = self.request.user.id
         data['user2_id'] = User.objects.get(username=data['username'][0]).id
         data.pop('username')
-        print(data)
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return
+        return response.Response(serializer.data, headers=headers)
 
     def perform_create(self, serializer):
         serializer.save()

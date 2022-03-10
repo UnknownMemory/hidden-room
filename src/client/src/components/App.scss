@@ -13,6 +13,14 @@ h1 {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
+
+    @media (min-width: 0){
+        font-size: 2.4rem !important;
+    }
+
+    @include media-breakpoint-up(md) {
+        font-size: 3.6rem !important;
+    }
 }
 
 a {
@@ -49,7 +57,7 @@ a {
 
 .btn-hidden-option {
     color: #fff;
-    background-color: #20222586;
+    background-color: #202225;
     border-radius: 50px;
 
     &:hover {

@@ -2,17 +2,21 @@ import React, {useReducer, useEffect, useContext, useRef} from 'react';
 import {Col, Navbar, InputGroup, Button, FormControl} from 'react-bootstrap';
 import {useSwipeable} from 'react-swipeable';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 import Cookies from 'js-cookie';
 
 import Message from '../Message/Message';
 
 import UserContext from '../../contexts/UserContext';
 import ChatReducer from './ChatReducer';
-import ChatService from '../../services/ChatService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useAPI from '../../hooks/useAPI';
 
 const Chat = (props) => {
-    const Chat = new ChatService();
+    const {t} = useTranslation();
+    const {get, status} = new useAPI();
+    const token = Cookies.get('auth_token');
+    
     let ws = useRef();
     let messagesDiv = useRef();
 
@@ -30,8 +34,10 @@ const Chat = (props) => {
     useDocumentTitle(state.room ? `${state.room.user2} & ${state.room.user1} / Hidden Room` : 'Hidden Room');
 
     const getChatrooms = async () => {
-        let response = await Chat.getChatroom(props.roomID);
-        dispatch({type: 'get_room', room: response});
+        let response = await get(`/chat/private-chatrooms/${props.roomID}/`, null, {Authorization: `Token ${token}`});
+        if(status.current.ok){
+            dispatch({type: 'get_room', room: response});
+        }
     };
 
     const sendMessage = () => {
@@ -47,7 +53,7 @@ const Chat = (props) => {
 
     const scrollEvent = async () => {
         if (messagesDiv.current.scrollTop <= 0 && state.next != null) {
-            const messages = await Chat.getOldMessages(state.next);
+            const messages = await get(state.next, null, {Authorization: `Token ${this.token}`});
 
             dispatch({type: 'messages', messages: [...messages.results.reverse(), ...state.messages]});
             dispatch({type: 'next', next: messages.next});
@@ -68,7 +74,7 @@ const Chat = (props) => {
     useEffect(() => {
         getChatrooms();
 
-        Chat.getOldMessages(`${process.env.REACT_APP_API_URL}/api/v1/chat/room/${props.roomID}/messages/`).then((res) => {
+        get(`/chat/room/${props.roomID}/messages/`, null, {Authorization: `Token ${token}`}).then((res) => {
             dispatch({type: 'messages', messages: res.results.reverse()});
             dispatch({type: 'next', next: res.next});
             document.querySelector('.messages').scrollTo(0, document.querySelector('.messages').scrollHeight);
@@ -118,7 +124,7 @@ const Chat = (props) => {
             </div>
             <InputGroup className="p-3">
                 <FormControl
-                    placeholder="Message"
+                    placeholder={t('chat.form.placeholder')}
                     onChange={(e) => dispatch({type: 'message', field: 'message', message: e.currentTarget.value})}
                     aria-label="Message"
                     aria-describedby="message-input"
@@ -126,7 +132,7 @@ const Chat = (props) => {
                 />
                 <InputGroup.Append>
                     <Button variant="hidden" onClick={sendMessage}>
-                        Send
+                        {t('common.form.send')}
                     </Button>
                 </InputGroup.Append>
             </InputGroup>

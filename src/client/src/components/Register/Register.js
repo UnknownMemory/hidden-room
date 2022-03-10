@@ -1,15 +1,22 @@
 import React, {useReducer} from 'react';
 import {Link, useHistory} from 'react-router-dom';
-import {Container, Form, Button, Row, Col} from 'react-bootstrap';
+import {Container, Form, Button, Row, Col, Spinner} from 'react-bootstrap';
 import {useDebouncedCallback} from 'use-debounce';
+import {useTranslation} from 'react-i18next';
+
+import LangSelector from '../LangSelector/LangSelector';
 
 import RegisterReducer from './RegisterReducer';
-import AuthService from '../../services/AuthService';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import passwordChecker from '../../utils/passwordChecker';
+import useAPI from '../../hooks/useAPI';
 
 const Register = () => {
-    useDocumentTitle('Register / Hidden Room');
+    const {t} = useTranslation();
+    const {get, post, isLoading, status} = useAPI();
+
+    useDocumentTitle(`${t('register.title')} / Hidden Room`);
+
     let history = useHistory();
 
     const initState = {
@@ -21,7 +28,7 @@ const Register = () => {
         isPasswordValid: false,
         isEmailValid: false,
         isUsernameValid: false,
-        isPasswordMatching: false
+        isPasswordMatching: false,
     };
 
     const [state, dispatch] = useReducer(RegisterReducer, initState);
@@ -35,8 +42,8 @@ const Register = () => {
         formdata.append('confirm_password', state.confirm_password);
         formdata.append('email', state.email);
 
-        const res = await AuthService.Register(formdata);
-        if(res.id){;
+        await post('/account/create/', formdata);
+        if (status.current.ok) {
             return history.push('/register/success');
         }
         return;
@@ -54,9 +61,9 @@ const Register = () => {
     }, 800);
 
     const checkEmail = useDebouncedCallback(async (dispatch) => {
-        const response = await AuthService.checkEmail(state.email);
+        const response = await get(`/account/check/email/?email=${state.email}`);
         dispatch({type: 'error', errorType: 'email', error: response});
-        if(response != true){
+        if (response != true) {
             dispatch({type: 'isEmailValid', isEmailValid: false});
         } else {
             dispatch({type: 'isEmailValid', isEmailValid: true});
@@ -64,9 +71,9 @@ const Register = () => {
     }, 800);
 
     const checkUsername = useDebouncedCallback(async (dispatch) => {
-        const response = await AuthService.checkUsername(state.username);
+        const response = await get(`/account/check/username/?username=${state.username}`);
         dispatch({type: 'error', errorType: 'username', error: response});
-        if(response != true){
+        if (response != true) {
             dispatch({type: 'isUsernameValid', isUsernameValid: false});
         } else {
             dispatch({type: 'isUsernameValid', isUsernameValid: true});
@@ -84,21 +91,23 @@ const Register = () => {
     }, 800);
 
     return (
-        <Container className="d-flex justify-content-center align-items-center h-100" fluid>
-            <Row>
-                <Col className="text-center main-title">
+        <Container className="h-100" fluid>
+            <Row className="h-100 justify-content-center">
+                <Col xl={3} lg={4} md={6} className="text-center main-title align-self-center">
                     <h1>Hidden Room</h1>
-                    <h2>Create an account</h2>
+                    <h2>{t('register.description')}</h2>
                     <Form className="text-left" onSubmit={onSubmit}>
                         <Form.Group controlId="email">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>{t('common.form.email')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
                                     dispatch({type: 'change', field: 'email', payload: e.currentTarget.value});
                                     checkEmail(dispatch);
                                 }}
                                 type="email"
-                                className={state.email.length > 0 ? (state.isEmailValid ? 'input-valid' : 'input-error') : ''}
+                                className={
+                                    state.email.length > 0 ? (state.isEmailValid ? 'input-valid' : 'input-error') : ''
+                                }
                                 required
                             />
                             <Form.Text className="error">
@@ -107,14 +116,20 @@ const Register = () => {
                         </Form.Group>
 
                         <Form.Group controlId="username">
-                            <Form.Label>Username</Form.Label>
+                            <Form.Label>{t('common.form.username')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
                                     dispatch({type: 'change', field: 'username', payload: e.currentTarget.value});
                                     checkUsername(dispatch);
                                 }}
                                 type="username"
-                                className={state.username.length > 0 ? (state.isUsernameValid ? 'input-valid' : 'input-error') : ''}
+                                className={
+                                    state.username.length > 0
+                                        ? state.isUsernameValid
+                                            ? 'input-valid'
+                                            : 'input-error'
+                                        : ''
+                                }
                                 required
                             />
                             <Form.Text className="error">
@@ -123,27 +138,28 @@ const Register = () => {
                         </Form.Group>
 
                         <Form.Group controlId="password">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label>{t('common.form.password')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
-                                    dispatch({type: 'change', field: 'password', payload: e.currentTarget.value})
+                                    dispatch({type: 'change', field: 'password', payload: e.currentTarget.value});
                                     checkPassword(dispatch);
-                                    }
-                                }
+                                }}
                                 type="password"
                                 className={state.password.length > 0 ? state.error.password : ''}
                                 required
                             />
-                            <Form.Text muted>
-                                Your password must be 8-20 characters long and contain at least one number.
-                            </Form.Text>
+                            <Form.Text muted>{t('register.passwordValidation')}</Form.Text>
                         </Form.Group>
 
                         <Form.Group controlId="confirm_password">
-                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Label>{t('register.confirmPassword')}</Form.Label>
                             <Form.Control
                                 onChange={(e) => {
-                                    dispatch({type: 'change', field: 'confirm_password', payload: e.currentTarget.value});
+                                    dispatch({
+                                        type: 'change',
+                                        field: 'confirm_password',
+                                        payload: e.currentTarget.value,
+                                    });
                                     passwordMatch(dispatch);
                                 }}
                                 type="password"
@@ -152,16 +168,33 @@ const Register = () => {
                             />
                         </Form.Group>
 
-                        <Button variant="hidden" type="submit" disabled={state.isPasswordValid && state.isEmailValid && state.isUsernameValid && state.isPasswordMatching ? false : true}>
-                            Register
+                        <Button
+                            variant="hidden"
+                            type="submit"
+                            disabled={
+                                state.isPasswordValid &&
+                                state.isEmailValid &&
+                                state.isUsernameValid &&
+                                state.isPasswordMatching
+                                    ? false
+                                    : true
+                            }>
+                            {isLoading ? (
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                            ) : (
+                                <span>{t('register.title')}</span>
+                            )}
                         </Button>
                         <div className="mt-2">
-                            <p className="d-inline">Already have an account?</p>
+                            <p className="d-inline">{t('register.accountExist')}</p>
                             <Link className="ml-1" to="/login">
-                                Login
+                                {t('login.title')}
                             </Link>
                         </div>
                     </Form>
+                </Col>
+                <Col className="lang-select position-absolute" lg={1} md={2} sm={2} xs={4}>
+                    <LangSelector></LangSelector>
                 </Col>
             </Row>
         </Container>

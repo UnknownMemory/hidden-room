@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom';
 
 import App from './components/App';
+import './i18n';
 import './sass/style.scss';
 
 render(

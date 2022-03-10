@@ -1,11 +1,16 @@
 import React, {useReducer} from 'react';
 import {Form, InputGroup, Button} from 'react-bootstrap';
+import {useTranslation} from 'react-i18next';
+import Cookies from 'js-cookie';
 
 import AddFriendReducer from './AddFriendReducer';
-import UserService from '../../services/UserService';
+import useAPI from '../../hooks/useAPI';
 
 const AddFriend = () => {
-    const UserAPI = new UserService();
+    const {t, i18n} = useTranslation();
+    const token = Cookies.get('auth_token');
+
+    const {post} = new useAPI();
     const [state, dispatch] = useReducer(AddFriendReducer, {username: ''});
 
     const onSubmit = async (e) => {
@@ -14,22 +19,22 @@ const AddFriend = () => {
         const formdata = new FormData();
         formdata.append('username', state.username);
 
-        await UserAPI.AddFriendRequest(formdata);
+        await post('/account/friends/add/', formdata, {Authorization: `Token ${token}`});
         return;
     };
 
     return (
         <Form onSubmit={onSubmit}>
-            <Form.Label>You can add a friend with their username</Form.Label>
+            <Form.Label>{t('relationship.addFriend.description')}</Form.Label>
             <InputGroup>
                 <Form.Control
                     type="text"
-                    placeholder="Username"
+                    placeholder={t('common.form.username')}
                     onChange={(e) => dispatch({type: 'username', username: e.currentTarget.value})}
                 />
                 <InputGroup.Append>
                     <Button variant="hidden" type="submit">
-                        Send request
+                        {t('relationship.addFriend.sendRequest')}
                     </Button>
                 </InputGroup.Append>
             </InputGroup>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Suspense} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -11,15 +11,18 @@ import Registered from './Registered/Registered';
 import Main from './Main/Main';
 import NotFound from './NotFound/NotFound';
 import UserContext from '../contexts/UserContext';
-import UserService from '../services/UserService';
+import useAPI from '../hooks/useAPI';
 
 const App = () => {
-    const UserAPI = new UserService();
+    const {get, status} = new useAPI();
+    const token = Cookies.get('auth_token');
     const [user, setUser] = useState({});
 
     const getUserDetail = async () => {
-        const currentUser = await UserAPI.getCurrentUser();
-        setUser(currentUser);
+        const currentUser = await get('/account/me/', null, {Authorization: `Token ${token}`});
+        if (status.current.ok) {
+            setUser(currentUser);
+        }
     };
 
     useEffect(() => {
@@ -27,18 +30,20 @@ const App = () => {
     }, []);
 
     return (
-        <UserContext.Provider value={{user: user, getUserDetail: getUserDetail}}>
-            <Router>
-                <Switch>
-                    <Route exact path="/" render={() => <Redirect to="/login" />} />
-                    <PublicRoute exact restricted="false" path="/login" component={Login} />
-                    <PublicRoute exact restricted="false" path="/register" component={Register} />
-                    <PublicRoute exact restricted="false" path="/register/success" component={Registered} />
-                    <PrivateRoute exact restricted="true" path="/app/room/:id(\d+|me)" component={Main} />
-                    <Route exact path="*" component={NotFound} />
-                </Switch>
-            </Router>
-        </UserContext.Provider>
+        <Suspense fallback="loading">
+            <UserContext.Provider value={{user: user, getUserDetail: getUserDetail}}>
+                <Router>
+                    <Switch>
+                        <Route exact path="/" render={() => <Redirect to="/login" />} />
+                        <PublicRoute exact restricted="false" path="/login" component={Login} />
+                        <PublicRoute exact restricted="false" path="/register" component={Register} />
+                        <PublicRoute exact restricted="false" path="/register/success" component={Registered} />
+                        <PrivateRoute exact restricted="true" path="/app/room/:id(\d+|me)" component={Main} />
+                        <Route exact path="*" component={NotFound} />
+                    </Switch>
+                </Router>
+            </UserContext.Provider>
+        </Suspense>
     );
 };
 
