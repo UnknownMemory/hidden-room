@@ -3,6 +3,7 @@ const path = require('path');
 const dotenv = require('dotenv').config();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -13,6 +14,9 @@ module.exports = {
         publicPath: '/',
         filename: 'bundle.js',
     },
+
+    devtool: false,
+
     devServer: {
         static: './',
         historyApiFallback: true,
@@ -33,11 +37,14 @@ module.exports = {
             },
             {
                 test: /\.svg$/,
-                loader: 'file-loader'
-            }
+                loader: 'file-loader',
+            },
         ],
     },
     plugins: [
+        new CopyWebpackPlugin({
+            patterns: [{from: './locales', to: path.resolve(__dirname, 'build/locales')}],
+        }),
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(dotenv.parsed),
         }),
